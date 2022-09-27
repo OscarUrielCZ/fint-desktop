@@ -1,0 +1,40 @@
+.AddExpenseForm {
+    background-color: rgb(245, 245, 245);
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.AddExpenseForm input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 6px 10px;
+    font-size: 13pt;
+    border: 1px solid rgb(145, 145, 145);
+}
+
+.AddExpenseForm .buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.AddExpenseForm button {
+    padding: 6px 8px;
+    min-width: 40%;
+    font-size: 13pt;
+    font-weight: bold;
+    border: none;
+    border-radius: 3px;
+}
+
+.AddExpenseForm .add-button {
+    background-color: rgba(97, 218, 250, 0.8);
+}
+
+.AddExpenseForm .cancel-button {
+    background-color: rgba(200, 200, 200, 0.8);
+}
