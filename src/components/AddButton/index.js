@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import './AddButton.css'
 
-import { ExpensesContext } from '../context/ExpensesContext';
+import { ExpensesContext } from '../../context/ExpensesContext';
 
 function AddButton() {
     const { setOpenModal } = useContext(ExpensesContext);

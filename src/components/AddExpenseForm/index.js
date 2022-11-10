@@ -1,31 +1,15 @@
 import React, { useState, useContext } from 'react';
 
+import icon from '../../assets/expenses.png';
 import './AddExpenseForm.css';
 
-import { ExpensesContext } from '../context/ExpensesContext';
+import { ExpensesContext } from '../../context/ExpensesContext';
+import { CSTtoUTC } from "../../utils";
 
 function AddExpenseForm() {
-    const curdate = new Date();
-    let month = curdate.getMonth() + 1;
-    if(month < 10)
-        month = '0'+month;
-
-    const { setOpenModal, addExpense } = useContext(ExpensesContext);
-    const [expense, setExpense] = useState({
-        desc: '',
-        type: '',
-        amount: '',
-        date: `${curdate.getFullYear()}-${month}-${curdate.getDate()}`
-    });
-
-    const generateHash = text => {
-        const p = 45397489; // prime number
-        let id = 0;
-        for(let i=0; i<text.length; i++)
-            id += (p*text.charCodeAt(i));
-
-        return id;
-    };
+    const { setOpenModal, addExpense, formExpense } = useContext(ExpensesContext);
+    const [expense, setExpense] = useState(formExpense);
+    const [otherType, setOtherType] = useState(false);
 
     const onChange = e => {
         setExpense({
@@ -34,23 +18,37 @@ function AddExpenseForm() {
         });
     };
 
+    const onSelect = e => {
+        const selected = e.target.value;
+
+        if(selected === "other") {
+            setOtherType(true);
+        } else {
+            setOtherType(false);
+            setExpense({
+                ...expense, 
+                type: selected
+            });
+        }
+    };
+
     const onCancel = () => {
-        setOpenModal(false);
+        setOpenModal();
     };
 
     const onSubmit = event => {
         event.preventDefault();
-        const id = generateHash(expense.desc);
-        console.log(id);
-        addExpense({
-            ...expense,
-            id
-        });
-        setOpenModal(false);
+        let newExpense = expense;
+        newExpense.date = CSTtoUTC(expense.date);
+        addExpense(newExpense);
+        setOpenModal();
     };
     return (
         <form onSubmit={onSubmit} className="AddExpenseForm">
-            <h3>Agrega un gasto</h3>
+            <div className="form-header">
+                <img src={icon} alt="Ícono" className="icon" />
+                <h3>Registra un nuevo gasto</h3>
+            </div>
             <input
                 onChange={onChange}
                 value={expense.desc}
@@ -58,13 +56,23 @@ function AddExpenseForm() {
                 type="text"
                 placeholder="Descripción"
                 required />
-            <input 
+            <select name="type" onChange={onSelect}>
+                <option value="">--Categoría--</option>
+                <option value="food">Comida</option>
+                <option value="service">Servicio</option>
+                <option value="doctor">Médico</option>
+                <option value="transport">Transporte</option>
+                <option value="invest">Inversión</option>
+                <option value="expense">Gasto</option>
+                <option value="other">Otro</option>
+            </select>
+            {otherType && <input 
                 onChange={onChange}
                 value={expense.type}
                 name="type"
                 type="text"
                 placeholder="Categoría" 
-                required/>
+                required/>}
             <input 
                 onChange={onChange}
                 value={expense.amount}

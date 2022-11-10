@@ -1,0 +1,68 @@
+.AddExpenseForm {
+    width: 40%;
+    background-color: rgb(245, 245, 245);
+    padding: 20px 40px;
+    border-radius: 5px;
+}
+
+.AddExpenseForm .form-header {
+    text-align: center;
+}
+
+.AddExpenseForm .icon {
+    width: 80px;
+    background-color: rgb(238, 221, 221);
+    border-radius: 50%;
+}
+
+.AddExpenseForm input:focus, .AddExpenseForm select:focus   {
+    outline: solid 2px rgba(97, 218, 250, 0.4);
+}
+
+.AddExpenseForm input, .AddExpenseForm select {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    font-size: 13pt;
+    border: 2px solid rgba(195, 195, 195, 0.3);
+    border-radius: 5px;
+}
+
+.AddExpenseForm .buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.AddExpenseForm button {
+    padding: 6px 8px;
+    min-width: 40%;
+    font-size: 13pt;
+    font-weight: bold;
+    border: none;
+    border-radius: 3px;
+}
+
+.AddExpenseForm .add-button {
+    background-color: rgba(97, 218, 250, 0.8);
+}
+
+.AddExpenseForm .cancel-button {
+    background-color: rgba(200, 200, 200, 0.8);
+}
+
+@media screen and (max-device-width: 768px) {
+    .AddExpenseForm {
+        width: 60%;
+    }
+
+    .AddExpenseForm .buttons {
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+    }
+}
