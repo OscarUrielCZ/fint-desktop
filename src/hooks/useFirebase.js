@@ -1,30 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 import { db } from "../firebase";
 
-const EXPENSES_COLLECTION = "expenses";
-
-function useFirestore() {
-    const [loading, setLoading] = useState(true);
+function useFirestore(collectionName) {
+    const [loading, setLoading] = useState(false); // TODO: ponerlo en TRUE
     const [error, setError] = useState('');
     const [expenses, setExpenses] = useState([]);
+    const [categories, setCategories] = useState([]);
 
-    useEffect(() => {
-        getExpenses();
-    }, []);
-
-    const addExpense = async (expense) => {
-        await addDoc(collection(db, EXPENSES_COLLECTION), expense);
-        getExpenses();
+    const addDocument = async (data) => {
+        await addDoc(collection(db, collectionName), data);
     }
 
-    const getExpenses = async () => {
+    const getAllDocuments = async () => {
         setLoading(true);
         try {
-            const snapshots = await getDocs(collection(db, EXPENSES_COLLECTION));
+            const snapshots = await getDocs(collection(db, collectionName));
             const list = snapshots.docs.map(d => ({ ...d.data(), id:d.id }));
-            setExpenses(list);
+            return list;
         } catch(e) {
             setError(e);
         } finally {
@@ -32,28 +26,44 @@ function useFirestore() {
         }
     };
 
-    const deleteExpense = async (id) => {
-        console.log("Eliminando");
-        await deleteDoc(doc(db, EXPENSES_COLLECTION, id));
-        getExpenses();
-        /*const expensesRef = collection(db, EXPENSES_COLLECTION);
-        const q = query(expensesRef, where("id", "==", id));
-        const snaps = await getDocs(q);
-        snaps.forEach(d => deleteDoc(d.ref));
-        */
+    const deleteDocument = async (id) => {
+        await deleteDoc(doc(db, collectionName, id));
     }
 
-    const updateExpense = async (id, expense) => {
+    const updateDocument = async (id, data) => {
         ;
     }
 
+    const getAllCollections = async () => {
+        // const expensesSnaps = await getDocs(collection(db, 'expenses'));
+        // const expensesList = expensesSnaps.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+        // categories and subcategories
+
+        const categoriesSnaps = await getDocs(collection(db, 'categories'));
+        const categoriesList = await Promise.all(categoriesSnaps.docs.map(async category => {
+            const subcategoriesSnaps = await getDocs(collection(db, 'categories', category.id, 'subcategories'));
+            const subcategoriesList = await Promise.all(subcategoriesSnaps.docs.map(doc => (
+                { ...doc.data(), id:doc.id }
+            )));
+            return {
+                ...category.data(),
+                id: category.id,
+                subcategories: subcategoriesList
+            };
+        }));
+
+        console.log('cats', categoriesList);
+        setCategories(categoriesList);
+        console.log(categories);
+    };
+
     return {
-        expenses,
-        addExpense,
-        deleteExpense,
-        updateExpense,
         loading,
-        error
+        error,
+        expenses,
+        categories,
+        getAllCollections
     };
 }
 

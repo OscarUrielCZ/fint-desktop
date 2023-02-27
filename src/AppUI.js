@@ -1,8 +1,5 @@
 import React, { useContext } from 'react';
 
-import './App.css';
-import image from './assets/coins.png';
-
 import { ExpensesContext } from './context/ExpensesContext';
 import Modal from './modals/Modal';
 
@@ -13,23 +10,25 @@ import AddButton from './components/AddButton/';
 import AddExpenseForm from './components/AddExpenseForm/';
 import LoadingExpenses from './components/LoadingExpenses/';
 
+import './App.css';
+
 function AppUI() {
     const {
         error,
         loading,
         expensesFound,
-        openModal
+        openModal,
+        updateData
     } = useContext(ExpensesContext);
 
     return (
         <div className="App">
-            <div className="App-left">
+            <div>
                 <ExpenseSearch />
-                <img src={image} alt="Imagen de criptomonedas" className="App-image" />
             </div>
-            <div className="App-right">
+            <div>
                 <ExpenseList>
-                    {error && <p>Hubo un problema :(</p>}
+                    {error && <p>Hubo un problema :</p>}
                     
                     { loading && 
                         <LoadingExpenses />
@@ -52,6 +51,11 @@ function AppUI() {
                 }    
 
                 <AddButton />
+            </div>
+            <div className='bottom-pinned'>
+                <button className='btn-update' onClick={updateData}>
+                    Actualizar información
+                </button>
             </div>
         </div>
     );

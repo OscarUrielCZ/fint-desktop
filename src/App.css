@@ -1,15 +1,20 @@
 .App {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    position: relative;
 }
 
-.App-left {
-    min-height: 100vh;
-    background-color: rgb(46, 71, 71);
-    text-align: center;
+.bottom-pinned {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
-.App-image {
-    max-width: 80%;
-    margin-top: 2rem;
+.btn-update {
+    width: 100%;
+    padding: 0.6rem;
+
+    font-size: 1.1rem;
+
+    background-color: #577590;
+    color: white;
+    border: none;
 }

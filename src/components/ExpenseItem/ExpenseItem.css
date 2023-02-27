@@ -1,21 +1,33 @@
 .ExpenseItem {
-    display: grid;
-    grid-template-columns: 80% 20%;
     min-height: 75px;
     margin-top: 1rem;
     padding: 1rem;
     box-sizing: border-box;
-    border-radius: 1.2rem;
     box-shadow: 0px 5px 7px rgba(210, 218, 250, 0.5);
-    background-color: #d6d7ff;
+    background-color: #8ECAE6;
 }
 
-.ExpenseItem .desc {
+.ExpenseItem .name {
+    font-size: 1.2rem;
     margin-top: 0;
     margin-bottom: 3px;
 }
 
-.ExpenseItem .type {
-    color: darkgray;
+.ExpenseItem .category {
     font-weight: lighter;
+}
+
+.actions {
+    display: flex;
+    text-align: center;
+}
+
+.actions .delete {
+    flex: 1;
+    background-color: #f35a2b;
+}
+
+.actions .update {
+    flex: 1;
+    background-color: #FFB703;
 }

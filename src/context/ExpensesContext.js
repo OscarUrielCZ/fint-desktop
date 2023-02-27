@@ -1,10 +1,11 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 
 import useFirestore from '../hooks/useFirebase';
 // import useStorage from '../hooks/useStorage';
 
 const ExpensesContext = createContext();
 // const STORAGE_ID = 'fint_V1';
+const EXPENSES_COLLECTION = "expenses";
 
 const defaultExpense = () => {
 	const curdate = new Date();
@@ -23,9 +24,49 @@ function ExpensesProvider(props) {
 	const [formExpense, setFormExpense] = useState(defaultExpense());
 	const [openModal, setOpenModal] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
+	// const [expenses, setExpenses] = useState([]);
+
+	useEffect(() => {
+        // getExpenses();
+		
+    }, []);
+
 	// const {expenses, setExpenses, loading, error } = useStorage(STORAGE_ID, []);
-	const { expenses, addExpense, deleteExpense, updateExpense, loading, error } = useFirestore();
+	const { 
+		getAllCollections,
+		expenses,
+		categories,
+		loading, 
+		error } = useFirestore(EXPENSES_COLLECTION);
 	
+		const updateData = () => {
+			// eliminando registros pendientes
+			// editando registros pendientes
+			// agregando registros pendientes
+	
+			// trayendo información
+			getAllCollections();	
+		};
+
+	const addExpense = (expense) => {
+		// addDocument(expense);
+		// getExpenses();
+	};
+
+	const deleteExpense = async (id) => {
+		// await deleteDocument(id)
+		// getExpenses();
+	};
+
+	const updateExpense = async (id, expense) => {
+		;
+	};
+	
+	const getExpenses = async () => {
+		// const allExpenses = await getAllDocuments();
+		// setExpenses(allExpenses);
+	};
+		
 	const openUpdateExpenseModal = expense => {
 		setFormExpense(expense);
 		setOpenModal(true);
@@ -43,6 +84,8 @@ function ExpensesProvider(props) {
 	return (
 		<ExpensesContext.Provider value={{
 			expensesFound,
+			expenses,
+			categories,
 			addExpense,
 			deleteExpense,
 			updateExpense,
@@ -51,9 +94,10 @@ function ExpensesProvider(props) {
 			loading,
 			error,
 			openModal,
-			setOpenModal,
 			formExpense,
-			openUpdateExpenseModal
+			setOpenModal,
+			openUpdateExpenseModal,
+			updateData
 		}}>
 			{props.children}
 		</ExpensesContext.Provider>
