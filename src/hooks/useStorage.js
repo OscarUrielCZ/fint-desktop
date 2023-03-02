@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
+import useFirestore from './useFirebase';
 
-function useStorage(storageName, initialValue) {
+function useStorage(storageName) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
-    const [expenses, setExpenses] = useState(initialValue);
+    const [expenses, setExpenses] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const { getAllCollections } = useFirestore();
 
     // fetching data
     useEffect(() => {
@@ -12,26 +16,45 @@ function useStorage(storageName, initialValue) {
                 const storage = localStorage.getItem(storageName);
                 let parsedData;
                 if(storage == null) {
-                    localStorage.setItem(storageName, JSON.stringify(initialValue));
-                    parsedData = initialValue;
+                    parsedData = {
+                        expenses: [],
+                        categories: []
+                    };
+                    localStorage.setItem(storageName, JSON.stringify(parsedData));
                 } else {
                     parsedData = JSON.parse(storage);
                 }
-                setExpenses(parsedData);
+                setExpenses(parsedData.expenses);
+                setCategories(parsedData.categories);
             } catch(e) {
                 setError(e);
             } finally {
                 setLoading(false);
             }
         }, 1500);
-    }, [storageName, initialValue]);
+    }, [storageName]);
 
-    const saveExpenses = expenses => {
-        setExpenses(expenses);
-        localStorage.setItem(storageName, JSON.stringify(expenses));
+    const updateData = async () => {
+        const { expenses: dbExpenses, categories: dbCategories } = await getAllCollections();
+
+        // corroborar cambios
+
+        // guardar cambios
+        setExpenses(dbExpenses);
+        setCategories(dbCategories);
+        saveData(dbExpenses, dbCategories);
     }
 
-    return { expenses, setExpenses: saveExpenses, loading, error };
+    const saveData = (expenses, categories) => {
+        const data = {
+            expenses,
+            categories
+        };
+
+        localStorage.setItem(storageName, JSON.stringify(data));
+    }
+
+    return { expenses, categories, updateData, loading, error };
 }
 
 export default useStorage;

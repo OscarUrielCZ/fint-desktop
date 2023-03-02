@@ -3,30 +3,20 @@ import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore"
 
 import { db } from "../firebase";
 
-function useFirestore(collectionName) {
-    const [loading, setLoading] = useState(false); // TODO: ponerlo en TRUE
+function useFirestore() {
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [expenses, setExpenses] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const collections = {
+        expenses: "expenses",
+        categories: "categories",
+        subcategories: "subcategories"
+    };
 
-    const addDocument = async (data) => {
+    const insertDocument = async (data, collectionName) => {
         await addDoc(collection(db, collectionName), data);
     }
 
-    const getAllDocuments = async () => {
-        setLoading(true);
-        try {
-            const snapshots = await getDocs(collection(db, collectionName));
-            const list = snapshots.docs.map(d => ({ ...d.data(), id:d.id }));
-            return list;
-        } catch(e) {
-            setError(e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const deleteDocument = async (id) => {
+    const deleteDocument = async (id, collectionName) => {
         await deleteDoc(doc(db, collectionName, id));
     }
 
@@ -35,35 +25,59 @@ function useFirestore(collectionName) {
     }
 
     const getAllCollections = async () => {
-        // const expensesSnaps = await getDocs(collection(db, 'expenses'));
-        // const expensesList = expensesSnaps.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setLoading(true);
 
-        // categories and subcategories
+        try {
+            // expenses
+            const expensesSnaps = await getDocs(collection(db, collections.expenses));
+            const expensesList = await Promise.all(expensesSnaps.docs.map(doc => 
+                ({ ...doc.data(), id: doc.id }))
+            );
 
-        const categoriesSnaps = await getDocs(collection(db, 'categories'));
-        const categoriesList = await Promise.all(categoriesSnaps.docs.map(async category => {
-            const subcategoriesSnaps = await getDocs(collection(db, 'categories', category.id, 'subcategories'));
-            const subcategoriesList = await Promise.all(subcategoriesSnaps.docs.map(doc => (
-                { ...doc.data(), id:doc.id }
-            )));
+            console.log('list exps ', expensesList);
+
+            // categories and subcategories
+            const categoriesSnaps = await getDocs(collection(db, collections.categories));
+            const categoriesList = await Promise.all(categoriesSnaps.docs.map(async category => {
+                const subcategoriesSnaps = await getDocs(
+                    collection(db, collections.categories, category.id, collections.subcategories)
+                );
+                const subcategoriesList = await Promise.all(subcategoriesSnaps.docs.map(doc => (
+                    { ...doc.data(), id:doc.id }
+                )));
+                return {
+                    ...category.data(),
+                    id: category.id,
+                    subcategories: subcategoriesList
+                };
+            }));
+            console.log('list casts', categoriesList);
+
             return {
-                ...category.data(),
-                id: category.id,
-                subcategories: subcategoriesList
+                expenses: expensesList,
+                categories: categoriesList
             };
-        }));
-
-        console.log('cats', categoriesList);
-        setCategories(categoriesList);
-        console.log(categories);
+        } catch(e) {
+            setError(e);
+            console.log('error db', e);
+            return {
+                expenses: [],
+                categories: []
+            }
+        } finally {
+            setLoading(false);
+        }
+        
     };
 
     return {
         loading,
         error,
-        expenses,
-        categories,
-        getAllCollections
+        collections,
+        getAllCollections,
+        insertDocument,
+        deleteDocument,
+        updateDocument
     };
 }
 
