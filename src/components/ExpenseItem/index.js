@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import './ExpenseItem.css';
 
 import { ExpensesContext } from '../../context/ExpensesContext';
-import { castFirebaseDate } from '../../utils';
+import { castFirebaseDate } from '../../utils.ts';
 
 function ExpenseItem({ expense }) {
     const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
@@ -14,8 +14,11 @@ function ExpenseItem({ expense }) {
                 <div>
                     <span className='name'>{description}</span>
                 </div>
-                <div>
-                    <span className='category'>{category} - {subcategory}</span>
+                <div style={{ marginBottom: '0.3rem' }}>
+                    <span className='category'>{category}</span>
+                    {
+                        !!subcategory && <span className='category'> - {subcategory}</span>
+                    }
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>${amount}</span>

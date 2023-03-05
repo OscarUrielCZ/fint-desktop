@@ -5,9 +5,10 @@ import './AddButton.css'
 import { ExpensesContext } from '../../context/ExpensesContext';
 
 function AddButton() {
-    const { setOpenModal } = useContext(ExpensesContext);
+    const { setOpenModal, clearExpenseForm } = useContext(ExpensesContext);
 
     const showHideModal = () => {
+        clearExpenseForm();
         setOpenModal(prevState => !prevState);
     };
 

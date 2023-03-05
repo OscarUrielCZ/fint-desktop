@@ -1,33 +1,38 @@
 import React, { useState, createContext } from 'react';
+import moment from 'moment';
+
 import useExpensesStorage from '../hooks/useExpensesStorage.ts';
 
+import { castFirebaseDate } from '../utils.ts';
 import { StorageStatus } from '../common/types.ts'; 
+
 const ExpensesContext = createContext();
 const STORAGE_ID = 'fint_V2';
 
-const defaultExpense = () => {
-	const currdate = new Date();
-    let month = currdate.getMonth() + 1;
-    if(month < 10)
-        month = '0'+month;
-	return {
-		category: '',
-		subcategory: '',
-		description: '',
-		amount: '',
-		date: `${currdate.getFullYear()}-${month}-${currdate.getDate()}`
-	};
-}
+const defaultExpense = {
+	category: '',
+	subcategory: '',
+	description: '',
+	amount: '',
+	date: moment(new Date()).format("YYYY-MM-DD")
+};
 
 function ExpensesProvider(props) {
-	const [formExpense, setFormExpense] = useState(defaultExpense());
+	const [formExpense, setFormExpense] = useState(defaultExpense);
 	const [openModal, setOpenModal] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
 
-	const { error, loading, expenses, categories,
-		updateData, insertExpense, deleteExpense, updateExpense } = useExpensesStorage(STORAGE_ID);
-		
+	const { categories, error, expenses, loading,
+		deleteExpense, insertExpense, updateData, updateExpense } = useExpensesStorage(STORAGE_ID);
+
+	const clearExpenseForm = () => {
+		setFormExpense(defaultExpense);
+	};
+
 	const openUpdateExpenseModal = expense => {
+		expense.date = castFirebaseDate(expense.date);
+		console.log(expense);
+
 		setFormExpense(expense);
 		setOpenModal(true);
 	}
@@ -44,19 +49,22 @@ function ExpensesProvider(props) {
 
 	return (
 		<ExpensesContext.Provider value={{
-			loading,
+			categories,
 			error,
-			openModal,
-			formExpense,
-			expensesFound,
 			expenses,
+			expensesFound,
+			formExpense,
+			loading,
+			openModal,
 			searchValue,
-			setSearchValue,
-			setOpenModal,
-			openUpdateExpenseModal,
-			updateData,
-			insertExpense,
+
+			clearExpenseForm,
 			deleteExpense,
+			insertExpense,
+			openUpdateExpenseModal,
+			setOpenModal,
+			setSearchValue,
+			updateData,
 			updateExpense
 		}}>
 			{props.children}

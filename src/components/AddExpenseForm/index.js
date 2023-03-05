@@ -1,34 +1,35 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import moment from 'moment';
 
 import icon from '../../assets/expenses.png';
 import './AddExpenseForm.css';
 
 import { ExpensesContext } from '../../context/ExpensesContext';
-import { CSTtoUTC } from '../../utils';
+import { CSTtoUTC } from '../../utils.ts';
 
 function AddExpenseForm() {
-    const { setOpenModal, insertExpense, formExpense } = useContext(ExpensesContext);
+    const {
+        categories,
+        formExpense,
+        insertExpense, 
+        setOpenModal, 
+        updateExpense, 
+    } = useContext(ExpensesContext);
+    
     const [expense, setExpense] = useState(formExpense);
-    const [otherType, setOtherType] = useState(false);
+    const [subcategories, setSubcategories] = useState([]);
 
     const onChange = e => {
-        setExpense({
-            ...expense,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const onSelect = e => {
-        const selected = e.target.value;
-
-        if(selected === 'other') {
-            setOtherType(true);
-        } else {
-            setOtherType(false);
+        if (e.target.name === 'category') {
             setExpense({
-                ...expense, 
-                category: selected
+                ...expense,
+                subcategory: '',
+                [e.target.name]: e.target.value
+            });
+        } else {   
+            setExpense({
+                ...expense,
+                [e.target.name]: e.target.value
             });
         }
     };
@@ -43,12 +44,28 @@ function AddExpenseForm() {
 
     const onSubmit = event => {
         event.preventDefault();
-        let newExpense = expense;
-        newExpense.date = CSTtoUTC(expense.date);
-        newExpense.id = generateTempIndex(expense.description, newExpense.date);
-        insertExpense(newExpense);
+
+        console.log(expense);
+
+        if (expense.id !== undefined) { // ya existe, i.e. es actualización
+            updateExpense(expense);
+        } else { // es nuevo
+            let newExpense = expense;
+            newExpense.date = CSTtoUTC(expense.date);
+            newExpense.id = generateTempIndex(expense.description, newExpense.date);
+            insertExpense(newExpense);
+        }
         setOpenModal(false);
     };
+
+    useEffect(() => {
+        categories.forEach(cat => {
+            if (cat.value === expense.category)
+                setSubcategories(cat.subcategories);
+        });
+
+    }, [expense.category]);
+
     return (
         <form onSubmit={onSubmit} className='AddExpenseForm'>
             <div className='form-header'>
@@ -62,23 +79,26 @@ function AddExpenseForm() {
                 type='text'
                 placeholder='Descripción'
                 required />
-            <select name='category' onChange={onSelect}>
+            <select name='category' value={expense.category} onChange={onChange}>
                 <option value=''>--Categoría--</option>
-                <option value='food'>Comida</option>
-                <option value='service'>Servicio</option>
-                <option value='doctor'>Médico</option>
-                <option value='transport'>Transporte</option>
-                <option value='invest'>Inversión</option>
-                <option value='expense'>Gasto</option>
-                <option value='other'>Otro</option>
+                {
+                    categories.map(cat => (
+                        <option key={cat.id} value={cat.value}>{cat.displayValue}</option>
+                    ))
+                }
             </select>
-            {otherType && <input 
-                onChange={onChange}
-                value={expense.category}
-                name='category'
-                type='text'
-                placeholder='Categoría' 
-                required/>}
+            {
+                subcategories.length > 0 && (
+                    <select name='subcategory' value={expense.subcategory} onChange={onChange}>
+                        <option value=''>--Subcategoría--</option>
+                        {
+                            subcategories.map(subcat => (
+                                <option key={subcat.value} value={subcat.value}>{subcat.displayValue}</option>
+                            ))
+                        }
+                    </select>
+                )
+            }
             <input 
                 onChange={onChange}
                 value={expense.amount}

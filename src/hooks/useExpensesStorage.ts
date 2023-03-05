@@ -41,12 +41,14 @@ function useExpensesStorage(storageName: string) {
         expenses.forEach(async expense => {
             if (expense.status === StorageStatus.NEW) {
                 let tempExpense = expense;
+                delete tempExpense.id;
                 delete tempExpense.status;
                 await insertDocument(tempExpense);
             } else if (expense.status === StorageStatus.DELETED) {
                 await deleteDocument(expense.id);
             } else if (expense.status === StorageStatus.UPDATED) {
                 let tempExpense = expense;
+                delete tempExpense.id;
                 delete tempExpense.status;
                 await updateDocument(tempExpense.id, tempExpense);
             }
@@ -61,7 +63,7 @@ function useExpensesStorage(storageName: string) {
         saveData(dbExpenses, dbCategories);
     }
 
-    const saveData = (expenses: Expense[], categories: Category[]) => {
+    const saveData = (expenses: Expense[], categories: Category[]): void => {
         const data: object = {
             expenses,
             categories
@@ -70,7 +72,7 @@ function useExpensesStorage(storageName: string) {
         localStorage.setItem(storageName, JSON.stringify(data));
     }
 
-    const insertExpense = (expense: Expense) => {
+    const insertExpense = (expense: Expense): void => {
         expense.status = StorageStatus.NEW;
         const newExpenses: Expense[] = [
             ...expenses,
@@ -80,20 +82,29 @@ function useExpensesStorage(storageName: string) {
         saveData(newExpenses, categories);
     };
 
-    const deleteExpense = (id: string) => {
-        const updatedExpenses: Expense[] = expenses.map(expense => {
-            if (expense.id === id)
-                expense.status = StorageStatus.DELETED;
-            return expense;
+    const deleteExpense = (id: string): void => {
+        const updatedExpenses: Expense[] = [];
+
+        expenses.forEach(expense => {
+            if (expense.id === id) {
+                if (expense.status !== StorageStatus.NEW) {
+                    expense.status = StorageStatus.DELETED;
+                    updatedExpenses.push(expense);
+                }
+            } else {
+                updatedExpenses.push(expense);
+            }
         });
+
         setExpenses(updatedExpenses.filter(expense => expense.status !== StorageStatus.DELETED ));
         saveData(updatedExpenses, categories);
     };
 
-    const updateExpense = (updatedExpense: Expense) => {
+    const updateExpense = (updatedExpense: Expense): void => {
         const updatedExpenses: Expense[] = expenses.map(expense => {
             if (expense.id === updatedExpense.id) {
-                updatedExpense.status = StorageStatus.UPDATED;
+                if (expense.status !== StorageStatus.NEW)
+                    updatedExpense.status = StorageStatus.UPDATED;
                 return updatedExpense;
             }
             return expense;

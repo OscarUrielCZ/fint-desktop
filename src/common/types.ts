@@ -5,7 +5,7 @@ export enum StorageStatus {
 }
 
 export interface Expense {
-    id?: string,
+    id: string,
     amount: number,
     date: Date,
     category: string,
