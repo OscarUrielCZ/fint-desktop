@@ -1,7 +1,7 @@
 import React, { useState, createContext } from 'react';
+import useExpensesStorage from '../hooks/useExpensesStorage.ts';
 
-import useStorage from '../hooks/useStorage';
-
+import { StorageStatus } from '../common/types.ts'; 
 const ExpensesContext = createContext();
 const STORAGE_ID = 'fint_V2';
 
@@ -11,8 +11,9 @@ const defaultExpense = () => {
     if(month < 10)
         month = '0'+month;
 	return {
-		desc: '',
-		type: '',
+		category: '',
+		subcategory: '',
+		description: '',
 		amount: '',
 		date: `${currdate.getFullYear()}-${month}-${currdate.getDate()}`
 	};
@@ -23,57 +24,40 @@ function ExpensesProvider(props) {
 	const [openModal, setOpenModal] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
 
-	const {expenses, updateData, loading, error } = useStorage(STORAGE_ID);
-
-	const addExpense = (expense) => {
-		// addDocument(expense);
-		// getExpenses();
-	};
-
-	const deleteExpense = async (id) => {
-		// await deleteDocument(id)
-		// getExpenses();
-	};
-
-	const updateExpense = async (id, expense) => {
-		;
-	};
-	
-	//const getExpenses = async () => {
-		// const allExpenses = await getAllDocuments();
-		// setExpenses(allExpenses);
-	//};
+	const { error, loading, expenses, categories,
+		updateData, insertExpense, deleteExpense, updateExpense } = useExpensesStorage(STORAGE_ID);
 		
 	const openUpdateExpenseModal = expense => {
 		setFormExpense(expense);
 		setOpenModal(true);
 	}
 
-	const expensesFound = searchValue.length === 0 ? 
+	let expensesFound = searchValue.length === 0 ? 
 		expenses : 
 		expenses.filter(exp => {
 			const searchText = searchValue.toLowerCase();
-			const descText = exp.desc.toLowerCase();
+			const descText = exp.description.toLowerCase();
 
 			return descText.includes(searchText);
 		});
+	expensesFound = expensesFound.filter(expense => expense.status !== StorageStatus.DELETED);
 
 	return (
 		<ExpensesContext.Provider value={{
-			expensesFound,
-			expenses,
-			addExpense,
-			deleteExpense,
-			updateExpense,
-			searchValue,
-			setSearchValue,
 			loading,
 			error,
 			openModal,
 			formExpense,
+			expensesFound,
+			expenses,
+			searchValue,
+			setSearchValue,
 			setOpenModal,
 			openUpdateExpenseModal,
-			updateData
+			updateData,
+			insertExpense,
+			deleteExpense,
+			updateExpense
 		}}>
 			{props.children}
 		</ExpensesContext.Provider>

@@ -6,13 +6,13 @@ import { castFirebaseDate } from '../../utils';
 
 function ExpenseItem({ expense }) {
     const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
-    const {id, desc, date, amount, category, subcategory} = expense;
+    const {id, description, date, amount, category, subcategory} = expense;
 
     return (
         <div style={{ borderRadius: '1rem' }}>
             <div className='ExpenseItem'>
                 <div>
-                    <span className='name'>{desc}</span>
+                    <span className='name'>{description}</span>
                 </div>
                 <div>
                     <span className='category'>{category} - {subcategory}</span>

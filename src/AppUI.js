@@ -28,13 +28,12 @@ function AppUI() {
             </div>
             <div>
                 <ExpenseList>
-                    {error && <p>Hubo un problema :</p>}
+                    {error && <p>Hubo un problema :</p> }
                     
-                    { loading && 
-                        <LoadingExpenses />
-                    }
+                    { loading && <LoadingExpenses /> }
 
-                    {!loading && !error && expensesFound.length === 0 && <p>Sin datos. Agrega uno nuevo</p>}
+                    {!loading && !error && expensesFound.length === 0 
+                        && <p>Sin datos. Agrega uno nuevo</p> }
 
                     {expensesFound.map(exp => (
                         <ExpenseItem

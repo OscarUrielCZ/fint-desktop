@@ -1,35 +1,33 @@
-import { useState } from "react";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 
-import { db } from "../firebase";
+import { db } from '../firebase';
 
 function useFirestore() {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const collections = {
-        expenses: "expenses",
-        categories: "categories",
-        subcategories: "subcategories"
+    enum DbCollections {
+        EXPENSES = 'expenses',
+        CATEGORIES = 'categories',
+        SUBCATEGORIES = 'subcategories'
     };
 
-    const insertDocument = async (data, collectionName) => {
+    const insertDocument = async (data: any, 
+                                collectionName: string = DbCollections.EXPENSES) => {
         await addDoc(collection(db, collectionName), data);
     }
 
-    const deleteDocument = async (id, collectionName) => {
+    const deleteDocument = async (id: string, 
+                                collectionName: string = DbCollections.EXPENSES) => {
         await deleteDoc(doc(db, collectionName, id));
     }
 
-    const updateDocument = async (id, data) => {
-        ;
+    const updateDocument = async (id: string, data: any, 
+                                collectionName: string = DbCollections.EXPENSES) => {
+        await updateDoc(doc(db, collectionName, id), data);
     }
 
     const getAllCollections = async () => {
-        setLoading(true);
-
         try {
             // expenses
-            const expensesSnaps = await getDocs(collection(db, collections.expenses));
+            const expensesSnaps = await getDocs(collection(db, DbCollections.EXPENSES));
             const expensesList = await Promise.all(expensesSnaps.docs.map(doc => 
                 ({ ...doc.data(), id: doc.id }))
             );
@@ -37,10 +35,10 @@ function useFirestore() {
             console.log('list exps ', expensesList);
 
             // categories and subcategories
-            const categoriesSnaps = await getDocs(collection(db, collections.categories));
+            const categoriesSnaps = await getDocs(collection(db, DbCollections.CATEGORIES));
             const categoriesList = await Promise.all(categoriesSnaps.docs.map(async category => {
                 const subcategoriesSnaps = await getDocs(
-                    collection(db, collections.categories, category.id, collections.subcategories)
+                    collection(db, DbCollections.CATEGORIES, category.id, DbCollections.SUBCATEGORIES)
                 );
                 const subcategoriesList = await Promise.all(subcategoriesSnaps.docs.map(doc => (
                     { ...doc.data(), id:doc.id }
@@ -58,22 +56,15 @@ function useFirestore() {
                 categories: categoriesList
             };
         } catch(e) {
-            setError(e);
-            console.log('error db', e);
             return {
                 expenses: [],
                 categories: []
             }
-        } finally {
-            setLoading(false);
         }
         
     };
 
     return {
-        loading,
-        error,
-        collections,
         getAllCollections,
         insertDocument,
         deleteDocument,
