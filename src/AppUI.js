@@ -23,10 +23,10 @@ function AppUI() {
 
     return (
         <div className="App">
-            <div>
+            <div className='top-pinned'>
                 <ExpenseSearch />
             </div>
-            <div>
+            <div style={{ marginTop: '5rem', marginBottom: '4rem' }}>
                 <ExpenseList>
                     {error && <p>Hubo un problema :</p> }
                     

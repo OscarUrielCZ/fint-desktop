@@ -45,10 +45,10 @@ function AddExpenseForm() {
     const onSubmit = event => {
         event.preventDefault();
 
-        console.log(expense);
-
         if (expense.id !== undefined) { // ya existe, i.e. es actualización
-            updateExpense(expense);
+            let updatedExpense = expense;
+            updatedExpense.date = CSTtoUTC(expense.date);
+            updateExpense(updatedExpense);
         } else { // es nuevo
             let newExpense = expense;
             newExpense.date = CSTtoUTC(expense.date);
@@ -64,7 +64,7 @@ function AddExpenseForm() {
                 setSubcategories(cat.subcategories);
         });
 
-    }, [expense.category]);
+    }, [expense.category, categories]);
 
     return (
         <form onSubmit={onSubmit} className='AddExpenseForm'>
@@ -79,7 +79,7 @@ function AddExpenseForm() {
                 type='text'
                 placeholder='Descripción'
                 required />
-            <select name='category' value={expense.category} onChange={onChange}>
+            <select name='category' value={expense.category} onChange={onChange} required>
                 <option value=''>--Categoría--</option>
                 {
                     categories.map(cat => (

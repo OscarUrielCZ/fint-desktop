@@ -2,6 +2,13 @@
     position: relative;
 }
 
+.top-pinned {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #e0ecec;
+}
+
 .bottom-pinned {
     position: fixed;
     bottom: 0;

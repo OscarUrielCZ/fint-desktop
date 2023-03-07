@@ -1,9 +1,8 @@
 import React, { useState, createContext } from 'react';
+
 import moment from 'moment';
 
 import useExpensesStorage from '../hooks/useExpensesStorage.ts';
-
-import { castFirebaseDate } from '../utils.ts';
 import { StorageStatus } from '../common/types.ts'; 
 
 const ExpensesContext = createContext();
@@ -30,10 +29,10 @@ function ExpensesProvider(props) {
 	};
 
 	const openUpdateExpenseModal = expense => {
-		expense.date = castFirebaseDate(expense.date);
-		console.log(expense);
+		let tempExpense = { ...expense };
+		tempExpense.date = moment(expense.date).format("YYYY-MM-DD");
 
-		setFormExpense(expense);
+		setFormExpense(tempExpense);
 		setOpenModal(true);
 	}
 

@@ -2,11 +2,15 @@ import React, { useContext } from 'react';
 import './ExpenseItem.css';
 
 import { ExpensesContext } from '../../context/ExpensesContext';
-import { castFirebaseDate } from '../../utils.ts';
+import moment from 'moment';
 
 function ExpenseItem({ expense }) {
     const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
     const {id, description, date, amount, category, subcategory} = expense;
+
+    const getFormattedDate = date => {
+        return moment(date).format("DD/MM/YYYY");
+    }
 
     return (
         <div style={{ borderRadius: '1rem' }}>
@@ -22,7 +26,7 @@ function ExpenseItem({ expense }) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>${amount}</span>
-                    <span>{castFirebaseDate(date)}</span>
+                    <span>{getFormattedDate(date)}</span>
                 </div>
             </div>
             <div className='actions'>

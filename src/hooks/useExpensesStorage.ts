@@ -26,7 +26,7 @@ function useExpensesStorage(storageName: string) {
                 } else {
                     parsedData = JSON.parse(storage);
                 }
-                setExpenses(parsedData.expenses);
+                setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) })));
                 setCategories(parsedData.categories);
             } catch(e) {
                 setError(e);
@@ -47,10 +47,11 @@ function useExpensesStorage(storageName: string) {
             } else if (expense.status === StorageStatus.DELETED) {
                 await deleteDocument(expense.id);
             } else if (expense.status === StorageStatus.UPDATED) {
-                let tempExpense = expense;
+                let tempExpense: Expense = expense;
+                const id: string = tempExpense.id;
                 delete tempExpense.id;
                 delete tempExpense.status;
-                await updateDocument(tempExpense.id, tempExpense);
+                await updateDocument(id, tempExpense);
             }
         });
 
@@ -96,7 +97,7 @@ function useExpensesStorage(storageName: string) {
             }
         });
 
-        setExpenses(updatedExpenses.filter(expense => expense.status !== StorageStatus.DELETED ));
+        setExpenses(updatedExpenses);
         saveData(updatedExpenses, categories);
     };
 

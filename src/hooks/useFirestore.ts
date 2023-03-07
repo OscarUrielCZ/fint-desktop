@@ -1,6 +1,7 @@
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 
 import { db } from '../firebase';
+import { castFirebaseDate } from '../utils.ts';
 
 function useFirestore() {
     enum DbCollections {
@@ -29,7 +30,7 @@ function useFirestore() {
             // expenses
             const expensesSnaps = await getDocs(collection(db, DbCollections.EXPENSES));
             const expensesList = await Promise.all(expensesSnaps.docs.map(doc => 
-                ({ ...doc.data(), id: doc.id }))
+                ({ ...doc.data(), id: doc.id, date: castFirebaseDate(doc.data().date) }))
             );
 
             console.log('list exps ', expensesList);
@@ -49,7 +50,7 @@ function useFirestore() {
                     subcategories: subcategoriesList
                 };
             }));
-            console.log('list casts', categoriesList);
+            console.log('list cats', categoriesList);
 
             return {
                 expenses: expensesList,
