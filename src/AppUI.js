@@ -1,22 +1,25 @@
 import React, { useContext } from 'react';
 
-import { ExpensesContext } from './context/ExpensesContext';
-import Modal from './modals/Modal';
-
+import AddButton from './components/AddButton/';
+import AddExpenseForm from './components/AddExpenseForm/';
 import ExpenseSearch from './components/ExpenseSearch/';
 import ExpenseList from './components/ExpenseList/';
 import ExpenseItem from './components/ExpenseItem/';
-import AddButton from './components/AddButton/';
-import AddExpenseForm from './components/AddExpenseForm/';
 import LoadingExpenses from './components/LoadingExpenses/';
+import ResumeExpenses from './components/ResumeExpenses/index.tsx';
+
+import Modal from './modals/Modal';
+
+import { ExpensesContext } from './context/ExpensesContext';
 
 import './App.css';
 
 function AppUI() {
     const {
         error,
-        loading,
+        expenses,
         expensesFound,
+        loading,
         openModal,
         updateData
     } = useContext(ExpensesContext);
@@ -26,7 +29,10 @@ function AppUI() {
             <div className='top-pinned'>
                 <ExpenseSearch />
             </div>
-            <div style={{ marginTop: '5rem', marginBottom: '4rem' }}>
+            <div style={{ marginTop: '5.5rem', marginBottom: '2rem' }}>
+                <ResumeExpenses expenses={expenses} />
+            </div>
+            <div style={{ marginBottom: '4rem' }}>
                 <ExpenseList>
                     {error && <p>Hubo un problema :</p> }
                     

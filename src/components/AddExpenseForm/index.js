@@ -5,7 +5,7 @@ import icon from '../../assets/expenses.png';
 import './AddExpenseForm.css';
 
 import { ExpensesContext } from '../../context/ExpensesContext';
-import { CSTtoUTC } from '../../utils.ts';
+import { toDateObject } from '../../utils.ts';
 
 function AddExpenseForm() {
     const {
@@ -47,12 +47,14 @@ function AddExpenseForm() {
 
         if (expense.id !== undefined) { // ya existe, i.e. es actualización
             let updatedExpense = expense;
-            updatedExpense.date = CSTtoUTC(expense.date);
+            updatedExpense.date = toDateObject(expense.date);
             updateExpense(updatedExpense);
         } else { // es nuevo
             let newExpense = expense;
-            newExpense.date = CSTtoUTC(expense.date);
+            console.log('registering', expense.date, typeof expense.date);
+            newExpense.date = toDateObject(expense.date);
             newExpense.id = generateTempIndex(expense.description, newExpense.date);
+            console.log('registering2', newExpense);
             insertExpense(newExpense);
         }
         setOpenModal(false);

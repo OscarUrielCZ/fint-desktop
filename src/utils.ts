@@ -10,6 +10,10 @@ function castFirebaseDate(object: any): Date {
 	return moment(object.seconds*1000).toDate();
 }
 
+function CSTtoUTC(date: Date): Date {
+	return moment.tz(date, 'America/Mexico_City').utc().toDate();
+}
+
 function UTCtoCST(date: Date): Date {
 	let m = moment.utc(date);
 	m.tz('America/Mexico_City');
@@ -17,12 +21,14 @@ function UTCtoCST(date: Date): Date {
 	return m.toDate();
 }
 
-function CSTtoUTC(date: Date): Date {
-	return moment.tz(date, 'America/Mexico_City').utc().toDate();
+function toDateObject(dateText: string): Date {
+	return moment(dateText, 'YYYY-MM-DD').toDate();
 }
+
 
 export {
 	castFirebaseDate,
+	CSTtoUTC,
 	UTCtoCST,
-	CSTtoUTC
+	toDateObject
 };

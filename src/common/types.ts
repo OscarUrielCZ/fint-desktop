@@ -4,7 +4,7 @@ export enum StorageStatus {
     DELETED
 }
 
-export interface Expense {
+export type Expense = {
     id: string,
     amount: number,
     date: Date,
