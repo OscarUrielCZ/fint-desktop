@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import useFirestore from './useFirestore.ts';
-import { Category, Expense, StorageStatus } from '../common/types.ts';
+import useFirestore from './useFirestore';
+import { Category, Expense, StorageStatus } from '../common/types';
+import { CreateExpenseDto, UpdateExpenseDto } from '../common/expense.dto';
 
 function useExpensesStorage(storageName: string) {
     const [error, setError] = useState<string>('');
@@ -26,10 +27,13 @@ function useExpensesStorage(storageName: string) {
                 } else {
                     parsedData = JSON.parse(storage);
                 }
-                setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) })));
+                setExpenses(parsedData.expenses.map((expense: Expense) => ({ ...expense, date: new Date(expense.date) })));
                 setCategories(parsedData.categories);
             } catch(e) {
-                setError(e);
+                if (typeof e === "string")
+                    setError(e);
+                else if (e instanceof Error)
+                    setError(e.message);
             } finally {
                 setLoading(false);
             }
@@ -38,19 +42,22 @@ function useExpensesStorage(storageName: string) {
 
     const updateData = async () => {
         // corroborar cambios
-        expenses.forEach(async expense => {
+        expenses.forEach(async (expense: Expense) => {
             if (expense.status === StorageStatus.NEW) {
-                let tempExpense = expense;
-                delete tempExpense.id;
+                let tempExpense: CreateExpenseDto = expense;
+                // delete tempExpense.id;
                 delete tempExpense.status;
+                
                 await insertDocument(tempExpense);
             } else if (expense.status === StorageStatus.DELETED) {
                 await deleteDocument(expense.id);
             } else if (expense.status === StorageStatus.UPDATED) {
-                let tempExpense: Expense = expense;
-                const id: string = tempExpense.id;
+                const id: string = expense.id;
+
+                let tempExpense: UpdateExpenseDto = expense;
                 delete tempExpense.id;
                 delete tempExpense.status;
+                
                 await updateDocument(id, tempExpense);
             }
         });

@@ -1,14 +1,16 @@
 import React from "react";
 
+import Chip from "../../components/Chip";
+
 function Home() {
     return (
         <div>
             <div>
-                <div>Semana</div>
-                <div>Mes</div>
-                <div>Trimestre</div>
-                <div>Semestre</div>
-                <div>Año</div>
+                <Chip>Semana</Chip>
+                <Chip>Mes</Chip>
+                <Chip>Trimestre</Chip>
+                <Chip>Semestre</Chip>
+                <Chip>Año</Chip>
             </div>
             <div>
                 Gráfica
