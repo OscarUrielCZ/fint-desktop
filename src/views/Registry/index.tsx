@@ -1,8 +1,17 @@
-import React from "react";
+import Chip from "../../components/Chip";
 
 function Registry() {
     return (
-        <div>Buscar</div>
+        <div>
+            <div>Buscar</div>
+            <div>
+                <Chip>Semana</Chip>
+                <Chip>Mes</Chip>
+                <Chip>Trimestre</Chip>
+                <Chip>Semestre</Chip>
+                <Chip>Año</Chip>
+            </div>
+        </div>
     );
 }
 

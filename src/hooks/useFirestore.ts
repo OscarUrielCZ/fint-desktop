@@ -5,6 +5,8 @@ import { db } from '../firebase';
 import { castFirebaseDate } from '../common/utils';
 import { Category, Expense } from '../common/types';
 
+// TODO: separar(modular) este archivo junto con api/firebase.ts
+
 function useFirestore() {
     enum DbCollections {
         EXPENSES = 'expenses',

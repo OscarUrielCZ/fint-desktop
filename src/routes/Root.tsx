@@ -1,28 +1,11 @@
-import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 function Root() {
     return (
         <>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Inicio</Link>
-                    </li>
-                    <li>
-                        <Link to="/presupuesto">Presupuesto</Link>
-                    </li>
-                    <li>
-                        <Link to="/registro">Registro</Link>
-                    </li>
-                    <li>
-                        <Link to="/configuracion">Configuración</Link>
-                    </li>
-                </ul>
-            </nav>
-            <div>
-                <Outlet />
-            </div>
+            <Navbar />
+            <Outlet />
         </>
     );
 }

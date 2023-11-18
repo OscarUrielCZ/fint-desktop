@@ -1,26 +1,7 @@
-import React from "react";
-
-import Chip from "../../components/Chip";
+import HomeView from "./HomeView";
 
 function Home() {
-    return (
-        <div>
-            <div>
-                <Chip>Semana</Chip>
-                <Chip>Mes</Chip>
-                <Chip>Trimestre</Chip>
-                <Chip>Semestre</Chip>
-                <Chip>Año</Chip>
-            </div>
-            <div>
-                Gráfica
-            </div>
-            <div>
-                Último gasto registrado
-                Mayor gastro registrado
-            </div>
-        </div>
-    );
+    return <HomeView />;  
 }
 
 export default Home;
