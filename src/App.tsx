@@ -11,6 +11,7 @@ import Budget from "./views/Budget/index";
 import Home from "./views/Home/index";
 import NotFound from "./views/NotFound/index";
 import Registry from "./views/Registry/index";
+import Settings from "./views/Settings";
 
 const router = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
             {
                 path: "/registro",
                 element: <Registry />
+            },
+            {
+                path: "/configuracion",
+                element: <Settings />
             }
         ]
     }
