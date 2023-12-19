@@ -1,15 +1,13 @@
-import React from 'react';
-
 const styles = {
     margin: '0 1rem',
     padding: '0',
     listStyle: 'none'
 };
 
-function ExpenseList({children}) {
+function ExpenseList({ children }: { children: JSX.Element[] }) {
     return (
         <ul style={styles}>
-            {children}
+            { children }
         </ul>
     );
 }

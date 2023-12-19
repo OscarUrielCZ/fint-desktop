@@ -1,10 +1,10 @@
-export default function Header() {
+export default function Header({ remaining, spent }: { remaining: number, spent: number }) {
     return (
         <div style={styles.container}>
             <span style={styles.subtitle}>Total gastado</span>
-            <span style={styles.title}>$4,235.90</span>
+            <span style={styles.title}>${spent}</span>
             <span style={styles.subtitle2}>Sobrante</span>
-            <span style={styles.subtitle}>$1,364.10</span>
+            <span style={styles.subtitle}>${remaining}</span>
         </div>
     );
 }

@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import './ExpenseItem.css';
 
-import { ExpensesContext } from '../../context/ExpensesContext';
+// import { ExpensesContext } from '../../context/ExpensesContext';
 import moment from 'moment';
+import { Expense } from '../../common/types';
 
-function ExpenseItem({ expense }) {
-    const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
+function ExpenseItem({ expense }: { expense: Expense }) {
+    // const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
     const {id, description, date, amount, category, subcategory} = expense;
 
-    const getFormattedDate = date => {
+    const getFormattedDate = (date: Date) => {
         return moment(date).format("DD/MM/YYYY");
     }
 
@@ -32,12 +33,12 @@ function ExpenseItem({ expense }) {
             <div className='actions'>
                 <span 
                     className='delete'
-                    onClick={() => deleteExpense(id)}>
+                    onClick={() => {}}>
                     Eliminar
                 </span>
                 <span 
                     className='update'
-                    onClick={() => openUpdateExpenseModal(expense)}>
+                    onClick={() => {}}>
                     Actualizar
                 </span>
             </div>

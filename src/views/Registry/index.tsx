@@ -11,6 +11,10 @@ function Registry() {
                 <Chip>Semestre</Chip>
                 <Chip>Año</Chip>
             </div>
+            <select name="category">
+                <option value="food">Comida</option>
+                <option value="etc">Etc</option>
+            </select>
         </div>
     );
 }

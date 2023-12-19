@@ -1,29 +1,41 @@
-import { Expense } from "../../common/types";
-import useExpensesStorage from "../../hooks/useExpensesStorage";
+import { CategorySpending, Expense } from "../../common/types";
+import CategorySpendingCard from "../../components/CategorySpendingCard";
+import ExpenseItem from "../../components/ExpenseItem";
+
+import ExpenseList from "../../components/ExpenseList";
 import Header from "./components/Header";
 
-export default function HomeView() {
-    const { expenses } = useExpensesStorage("fint-v2");
+type HomeViewProps = {
+    biggestCategory: CategorySpending | null,
+    biggestExpense: Expense | null,
+    expenses: Expense[],
+    remaining: number, 
+    spent: number
+};
 
-    const currDate = new Date();
-
-    const monthExpenses = expenses.filter((e: Expense) => (e.date.getMonth() === currDate.getMonth() && e.date.getFullYear() === currDate.getFullYear()));
-
-    console.log(monthExpenses);
-
+export default function HomeView({ 
+        biggestCategory,
+        biggestExpense,
+        expenses, 
+        remaining, 
+        spent }: HomeViewProps ) {
     return (
         <div>
-            <Header />
+            <Header spent={spent} remaining={remaining} />
             <div>
                 <button>NUEVO</button>
-                <select name="period">
-                    <option value="month">Mes</option>
-                    <option value="year">Año</option>
-                </select>
             </div>
             <div>
-                <div>GAsto de hoy</div>
-                <div>Otro super gasto de hoy</div>
+                <div>Has gastado más en</div>
+                { Boolean(biggestCategory) && <CategorySpendingCard category={biggestCategory as CategorySpending} /> }
+                <div>Tu mayor gasto del mes</div>
+                { Boolean(biggestExpense) && <ExpenseItem expense={biggestExpense as Expense} /> }
+            </div>
+            <div>
+                <span>Estos son tus gastos del mes</span>
+                <ExpenseList>
+                    { expenses.map((e) => (<ExpenseItem key={e.id} expense={e} />)) }
+                </ExpenseList>
             </div>
         </div>
     );

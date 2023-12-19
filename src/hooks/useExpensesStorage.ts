@@ -27,7 +27,7 @@ function useExpensesStorage(storageName: string) {
                 } else {
                     parsedData = JSON.parse(storage);
                 }
-                setExpenses(parsedData.expenses.map((expense: Expense) => ({ ...expense, date: new Date(expense.date) })));
+                setExpenses(parsedData.expenses.map((expense: Expense) => ({ ...expense, date: new Date(expense.date), amount: Number(expense.amount) })));
                 setCategories(parsedData.categories);
             } catch(e) {
                 if (typeof e === "string")

@@ -20,3 +20,8 @@ export interface Category {
     displayValue: string,
     subcategories?: Category[]
 }
+
+export interface CategorySpending {
+    category: string,
+    speding: number
+}
