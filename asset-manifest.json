@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/fint-desktop/static/css/main.97ee539b.css",
-    "main.js": "/fint-desktop/static/js/main.ba78a67f.js",
+    "main.js": "/fint-desktop/static/js/main.dfe004bf.js",
     "static/media/expenses.png": "/fint-desktop/static/media/expenses.3d2651195d19e969e518.png",
     "index.html": "/fint-desktop/index.html",
     "main.97ee539b.css.map": "/fint-desktop/static/css/main.97ee539b.css.map",
-    "main.ba78a67f.js.map": "/fint-desktop/static/js/main.ba78a67f.js.map"
+    "main.dfe004bf.js.map": "/fint-desktop/static/js/main.dfe004bf.js.map"
   },
   "entrypoints": [
     "static/css/main.97ee539b.css",
-    "static/js/main.ba78a67f.js"
+    "static/js/main.dfe004bf.js"
   ]
 }
