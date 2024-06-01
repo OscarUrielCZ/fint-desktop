@@ -4,6 +4,12 @@ export enum StorageStatus {
     DELETED
 }
 
+export enum Period {
+    WEEK,
+    MONTH,
+    YEAR,
+}
+
 export type Expense = {
     id: string,
     amount: number,
