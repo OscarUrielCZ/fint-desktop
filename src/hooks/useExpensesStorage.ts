@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 
 import useFirestore from './useFirestore.ts';
-import { Category, Expense, StorageStatus } from '../common/types.ts';
+import { Expense, StorageStatus } from '../common/types.ts';
 
 function useExpensesStorage(storageName: string) {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [expenses, setExpenses] = useState<Expense[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
 
     const { getAllCollections, insertDocument, 
         deleteDocument, updateDocument } = useFirestore();
@@ -67,7 +67,7 @@ function useExpensesStorage(storageName: string) {
         saveData(dbExpenses, dbCategories);
     }
 
-    const saveData = (expenses: Expense[], categories: Category[]): void => {
+    const saveData = (expenses: Expense[], categories: string[]): void => {
         const data: object = {
             expenses,
             categories
@@ -82,7 +82,19 @@ function useExpensesStorage(storageName: string) {
             ...expenses,
             expense
         ];
+        let newCategories: string[] = categories;
+        
+        console.log('agregando', expense.category);
+
+        // validar si ya existe la categoría agregada
+        let categoryExists = categories.filter((cat) => cat.toLowerCase() === expense.category.trim().toLowerCase());
+        console.log(categoryExists);
+        if (!categoryExists.length) {
+            newCategories.push(expense.category.trim());
+        }
+        
         setExpenses(newExpenses);
+        setCategories(newCategories);
         saveData(newExpenses, categories);
     };
 
