@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { numberWithCommas } from "../../common/utils.ts";
 
@@ -10,17 +10,6 @@ function ResumeExpenses({ expenses }) {
     0
   );
   let expensesCount: number = expenses.length;
-
-  // useEffect(() => {
-  //     totalAmount = 0;
-
-  //     for(let i=0; i<expensesCount; i++) {
-  //         totalAmount += expenses[i].amount;
-  //     }
-
-  //     console.log('render', totalAmount);
-
-  // }, [expenses]);
 
   return (
     <div>

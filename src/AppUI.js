@@ -26,7 +26,7 @@ function AppUI() {
   });
   const [periodSelected, setPeriodSelected] = useState(Period.YEAR);
 
-  const { error, expenses, expensesFound, loading, openModal, updateData } =
+  const { error, expensesFound, loading, openModal, updateData } =
     useContext(ExpensesContext);
 
   const expensesFiltered = expensesFound
@@ -34,10 +34,10 @@ function AppUI() {
       return (
         periodSelected === Period.FULL ||
         (periodSelected === Period.MONTH &&
-          expense.date.getMonth() == dateComponents.month &&
-          expense.date.getFullYear() == dateComponents.year) ||
+          expense.date.getMonth() === dateComponents.month &&
+          expense.date.getFullYear() === dateComponents.year) ||
         (periodSelected === Period.YEAR &&
-          expense.date.getFullYear() == dateComponents.year)
+          expense.date.getFullYear() === dateComponents.year)
       );
     })
     .sort((a, b) => b.date - a.date);
@@ -87,7 +87,10 @@ function AppUI() {
             <select
               value={dateComponents.month}
               onChange={(e) =>
-                setDateComponents({ ...dateComponents, month: e.target.value })
+                setDateComponents({
+                  ...dateComponents,
+                  month: Number(e.target.value),
+                })
               }
             >
               <option value="0">Enero</option>
@@ -111,7 +114,10 @@ function AppUI() {
             <select
               value={dateComponents.year}
               onChange={(e) =>
-                setDateComponents({ ...dateComponents, year: e.target.value })
+                setDateComponents({
+                  ...dateComponents,
+                  year: Number(e.target.value),
+                })
               }
             >
               <option value="2024">2024</option>

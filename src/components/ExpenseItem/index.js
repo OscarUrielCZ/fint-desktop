@@ -6,7 +6,7 @@ import moment from "moment";
 
 function ExpenseItem({ expense }) {
   const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
-  const { id, description, date, amount, category, subcategory } = expense;
+  const { id, description, date, amount, category } = expense;
 
   const getFormattedDate = (date) => {
     return moment(date).format("DD/MM/YYYY");

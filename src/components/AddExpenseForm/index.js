@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import moment from "moment";
 
 import icon from "../../assets/expenses.png";
@@ -35,9 +35,7 @@ function AddExpenseForm() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(expense);
 
-    return;
     if (expense.id !== undefined) {
       // ya existe, i.e. es actualización
       let updatedExpense = expense;
