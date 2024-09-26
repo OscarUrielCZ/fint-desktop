@@ -1,0 +1,16 @@
+.Chip {
+    background-color: #ddd;
+    border-radius: 50%;
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    text-align: center;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.Chip:hover {
+    cursor: pointer;
+    transform: scale(0.9);
+}

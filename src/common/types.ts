@@ -8,6 +8,7 @@ export enum Period {
     WEEK,
     MONTH,
     YEAR,
+    FULL
 }
 
 export type Expense = {

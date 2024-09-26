@@ -32,6 +32,7 @@ function AppUI() {
   const expensesFiltered = expensesFound
     .filter((expense) => {
       return (
+        periodSelected === Period.FULL ||
         (periodSelected === Period.MONTH &&
           expense.date.getMonth() == dateComponents.month &&
           expense.date.getFullYear() == dateComponents.year) ||
@@ -54,7 +55,7 @@ function AppUI() {
           onClick={() => setPeriodSelected(Period.MONTH)}
           style={{
             backgroundColor:
-              periodSelected === Period.MONTH ? "lightgreen" : "#ddd",
+              periodSelected === Period.MONTH ? "#9EA1D4" : "#ddd",
           }}
         >
           Mes
@@ -63,10 +64,19 @@ function AppUI() {
           onClick={() => setPeriodSelected(Period.YEAR)}
           style={{
             backgroundColor:
-              periodSelected === Period.YEAR ? "lightgreen" : "#ddd",
+              periodSelected === Period.YEAR ? "#9EA1D4" : "#ddd",
           }}
         >
           Año
+        </Chip>
+        <Chip
+          onClick={() => setPeriodSelected(Period.FULL)}
+          style={{
+            backgroundColor:
+              periodSelected === Period.FULL ? "#9EA1D4" : "#ddd",
+          }}
+        >
+          Todo
         </Chip>
       </div>
 
@@ -95,19 +105,21 @@ function AppUI() {
             </select>
           </div>
         )}
-        <div>
-          <span>Selecciona año en cuestión</span>
-          <select
-            value={dateComponents.year}
-            onChange={(e) =>
-              setDateComponents({ ...dateComponents, year: e.target.value })
-            }
-          >
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-          </select>
-        </div>
+        {periodSelected !== Period.FULL && (
+          <div>
+            <span>Selecciona año en cuestión</span>
+            <select
+              value={dateComponents.year}
+              onChange={(e) =>
+                setDateComponents({ ...dateComponents, year: e.target.value })
+              }
+            >
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: "4rem" }}>
