@@ -29,15 +29,17 @@ function AppUI() {
   const { error, expenses, expensesFound, loading, openModal, updateData } =
     useContext(ExpensesContext);
 
-  const expensesFiltered = expensesFound.filter((expense) => {
-    return (
-      (periodSelected === Period.MONTH &&
-        expense.date.getMonth() == dateComponents.month &&
-        expense.date.getFullYear() == dateComponents.year) ||
-      (periodSelected === Period.YEAR &&
-        expense.date.getFullYear() == dateComponents.year)
-    );
-  });
+  const expensesFiltered = expensesFound
+    .filter((expense) => {
+      return (
+        (periodSelected === Period.MONTH &&
+          expense.date.getMonth() == dateComponents.month &&
+          expense.date.getFullYear() == dateComponents.year) ||
+        (periodSelected === Period.YEAR &&
+          expense.date.getFullYear() == dateComponents.year)
+      );
+    })
+    .sort((a, b) => b.date - a.date);
 
   return (
     <div className="App">
