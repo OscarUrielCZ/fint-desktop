@@ -1,36 +1,37 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import { numberWithCommas } from '../../common/utils.ts';
+import { numberWithCommas } from "../../common/utils.ts";
 
-import './ResumeExpenses.css';
+import "./ResumeExpenses.css";
 
 function ResumeExpenses({ expenses }) {
+  let totalAmount: number = expenses.reduce(
+    (accumulator, currentValue) => accumulator + Number(currentValue.amount),
+    0
+  );
+  let expensesCount: number = expenses.length;
 
-    let totalAmount: number = expenses.reduce((accumulator, currentValue) => 
-        accumulator+Number(currentValue.amount), 0);
-    let expensesCount: number = expenses.length;
+  // useEffect(() => {
+  //     totalAmount = 0;
 
-    // useEffect(() => {
-    //     totalAmount = 0;
+  //     for(let i=0; i<expensesCount; i++) {
+  //         totalAmount += expenses[i].amount;
+  //     }
 
-    //     for(let i=0; i<expensesCount; i++) {
-    //         totalAmount += expenses[i].amount;
-    //     }
+  //     console.log('render', totalAmount);
 
-    //     console.log('render', totalAmount);
+  // }, [expenses]);
 
-    // }, [expenses]);
+  return (
+    <div>
+      <p className="stat-sentence">
+        Monto total: ${numberWithCommas(totalAmount)}
+      </p>
+      <p className="stat-sentence">Total de movimientos: {expensesCount}</p>
 
-    return (
-        <div>
-            <p className='stat-sentence'>Cantidad gastada: ${numberWithCommas(totalAmount)}</p>
-            <p className='stat-sentence'>Total de movimientos: {expensesCount}</p>
-
-            <h3>Gastos por categoría</h3>
-
-        </div>
-    );
-
+      <h3>Gastos por categoría</h3>
+    </div>
+  );
 }
 
 export default ResumeExpenses;
