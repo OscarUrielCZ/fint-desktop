@@ -5,7 +5,6 @@ export enum StorageStatus {
 }
 
 export enum Period {
-    WEEK,
     MONTH,
     YEAR,
     FULL

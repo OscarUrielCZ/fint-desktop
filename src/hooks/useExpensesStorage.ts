@@ -55,8 +55,11 @@ function useExpensesStorage(storageName: string) {
             }
         });
 
-        const { expenses: dbExpenses, 
-            categories: dbCategories } = await getAllCollections();
+        const { expenses: dbExpenses } = await getAllCollections();
+
+        // categorias
+        const dbCategories: String[] = [...new Set(expenses.map(expense => expense.category))];
+        console.log(dbCategories);
 
         // guardar cambios
         setExpenses(dbExpenses);
