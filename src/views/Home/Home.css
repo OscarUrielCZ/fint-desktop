@@ -1,14 +1,3 @@
-.App {
-    position: relative;
-}
-
-.top-pinned {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #F1F8E8;
-}
-
 .bottom-pinned {
     position: fixed;
     bottom: 0;
