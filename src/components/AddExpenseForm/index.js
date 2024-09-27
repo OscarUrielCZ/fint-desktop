@@ -82,19 +82,6 @@ function AddExpenseForm() {
         ))}
       </datalist>
 
-      {/* <select
-        name="category"
-        value={expense.category}
-        onChange={onChange}
-        required
-      >
-        <option value="">--Categoría--</option>
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select> */}
       <input
         onChange={onChange}
         value={expense.amount}
