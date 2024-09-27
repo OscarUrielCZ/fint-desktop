@@ -8,6 +8,7 @@ import Root from "./routes/Root.tsx";
 import Home from "./views/Home/index.tsx";
 import NotFound from "./views/NotFound/index.tsx";
 import Registry from "./views/Registry/index.tsx";
+import Login from "./views/Login/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
       {
         path: "/registro",

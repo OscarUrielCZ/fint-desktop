@@ -1,0 +1,9 @@
+.field {
+    display: block;
+}
+
+.login-button {
+    margin-top: 1rem;
+    padding: 3px;
+    width: 100%;
+}
