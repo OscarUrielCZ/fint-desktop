@@ -3,8 +3,10 @@
     margin-top: 1rem;
     padding: 1rem;
     box-sizing: border-box;
-    box-shadow: 0px 5px 7px rgba(210, 218, 250, 0.5);
-    background-color: #8ECAE6;
+    background-color: #f4f8f0;
+    border-radius: 10px 10px 0 0;
+    border: 1px solid rgba(210, 218, 250, 0.7);
+    box-shadow: 0px 5px 25px rgba(235, 239, 240, 0.5);
 }
 
 .ExpenseItem .name {
@@ -24,10 +26,14 @@
 
 .actions .delete {
     flex: 1;
-    background-color: #f35a2b;
+    background-color: rgba(253, 138, 138, 0.5);
+    padding: 4px;
+    color: #e04545;
 }
 
 .actions .update {
     flex: 1;
-    background-color: #FFB703;
+    background-color: rgba(241, 247, 181, 0.5);
+    padding: 4px;
+    color: #afb93e;
 }
