@@ -17,15 +17,15 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
-        path: "/",
+        path: "fint-desktop/",
         element: <Home />,
       },
       {
-        path: "/login",
+        path: "fint-desktop/login",
         element: <Login />,
       },
       {
-        path: "/registro",
+        path: "fint-desktop/registro",
         element: <Registry />,
       },
     ],
