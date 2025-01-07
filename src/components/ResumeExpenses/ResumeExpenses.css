@@ -1,4 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
 .stat-sentence {
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+}
+
+.secondary-stat-sentence {
+    text-align: center;
+    color: darkgray;
+    /* font-size: 0.8rem; */
 }

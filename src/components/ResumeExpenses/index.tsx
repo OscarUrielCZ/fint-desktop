@@ -12,13 +12,13 @@ function ResumeExpenses({ expenses }) {
   let expensesCount: number = expenses.length;
 
   return (
-    <div>
-      <p className="stat-sentence">
-        Monto total: ${numberWithCommas(totalAmount)}
-      </p>
-      <p className="stat-sentence">Total de movimientos: {expensesCount}</p>
-
-      <h3>Gastos por categoría</h3>
+    <div className="container">
+      <span className="stat-sentence">
+        Egresos totales: ${numberWithCommas(totalAmount)}
+      </span>
+      <span className="secondary-stat-sentence">
+        {expensesCount} movimientos
+      </span>
     </div>
   );
 }

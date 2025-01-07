@@ -83,7 +83,7 @@ function Home() {
       <div>
         {periodSelected === Period.MONTH && (
           <div>
-            <span>Selecciona mes en cuestión</span>
+            <span>Selecciona un mes</span>
             <select
               value={dateComponents.month}
               onChange={(e) =>
@@ -110,7 +110,7 @@ function Home() {
         )}
         {periodSelected !== Period.FULL && (
           <div>
-            <span>Selecciona año en cuestión</span>
+            <span>Selecciona un año</span>
             <select
               value={dateComponents.year}
               onChange={(e) =>
@@ -120,6 +120,8 @@ function Home() {
                 })
               }
             >
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
               <option value="2024">2024</option>
               <option value="2023">2023</option>
               <option value="2022">2022</option>
