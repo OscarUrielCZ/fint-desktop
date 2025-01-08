@@ -17,6 +17,7 @@
 
 .ExpenseItem .category {
     font-weight: lighter;
+    font-size: 0.9rem;
 }
 
 .actions {

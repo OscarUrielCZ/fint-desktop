@@ -17,13 +17,17 @@ function ExpenseItem({ expense }) {
       <div className="ExpenseItem">
         <div>
           <span className="name">{description}</span>
+          <span className="category"> ({category})</span>
         </div>
-        <div style={{ marginBottom: "0.3rem" }}>
-          <span className="category">{category}</span>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 5,
+          }}
+        >
+          <span className="category">{getFormattedDate(date)}</span>
           <span>${amount}</span>
-          <span>{getFormattedDate(date)}</span>
         </div>
       </div>
       <div className="actions">
@@ -34,7 +38,7 @@ function ExpenseItem({ expense }) {
           className="update"
           onClick={() => openUpdateExpenseModal(expense)}
         >
-          Actualizar
+          Modificar
         </span>
       </div>
     </div>
