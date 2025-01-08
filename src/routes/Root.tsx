@@ -7,7 +7,7 @@ function Root() {
       <nav>
         <ul style={{ listStyle: "none" }}>
           <li>
-            <Link to="/login">Cerrar sesión</Link>
+            <Link to="fint-desktop/login">Cerrar sesión</Link>
           </li>
         </ul>
       </nav>

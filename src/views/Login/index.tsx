@@ -9,7 +9,7 @@ function Login() {
       <input type="text" placeholder="Nombre de usuario" className="field" />
       <input type="password" placeholder="Contraseña" className="field" />
       <button className="login-button">
-        <Link to="/">Iniciar sesión</Link>
+        <Link to="/fint-desktop">Iniciar sesión</Link>
       </button>
     </div>
   );
