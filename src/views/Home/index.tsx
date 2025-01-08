@@ -24,20 +24,23 @@ function Home() {
     year: currentDate.getFullYear(),
     month: currentDate.getMonth(),
   });
+
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [periodSelected, setPeriodSelected] = useState(Period.YEAR);
 
-  const { error, expensesFound, loading, openModal, updateData } =
+  const { categories, error, expensesFound, loading, openModal, updateData } =
     useContext(ExpensesContext);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
       return (
-        periodSelected === Period.FULL ||
-        (periodSelected === Period.MONTH &&
-          expense.date.getMonth() === dateComponents.month &&
-          expense.date.getFullYear() === dateComponents.year) ||
-        (periodSelected === Period.YEAR &&
-          expense.date.getFullYear() === dateComponents.year)
+        (periodSelected === Period.FULL ||
+          (periodSelected === Period.MONTH &&
+            expense.date.getMonth() === dateComponents.month &&
+            expense.date.getFullYear() === dateComponents.year) ||
+          (periodSelected === Period.YEAR &&
+            expense.date.getFullYear() === dateComponents.year)) &&
+        (categoryFilter === "all" || categoryFilter === expense.category)
       );
     })
     .sort((a, b) => b.date - a.date);
@@ -83,7 +86,7 @@ function Home() {
       <div>
         {periodSelected === Period.MONTH && (
           <div>
-            <span>Selecciona un mes</span>
+            <span>Selecciona un mes </span>
             <select
               value={dateComponents.month}
               onChange={(e) =>
@@ -110,7 +113,7 @@ function Home() {
         )}
         {periodSelected !== Period.FULL && (
           <div>
-            <span>Selecciona un año</span>
+            <span>Selecciona un año </span>
             <select
               value={dateComponents.year}
               onChange={(e) =>
@@ -128,6 +131,19 @@ function Home() {
             </select>
           </div>
         )}
+
+        <div>
+          <span>Selecciona una categoría </span>
+          <select
+            name="category-filter"
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="all">Todas</option>
+            {categories.map((category) => (
+              <option value={category}>{category}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div style={{ marginBottom: "4rem" }}>
