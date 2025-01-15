@@ -16,6 +16,7 @@ import { ExpensesContext } from "../../context/ExpensesContext";
 import { Period } from "../../common/types.ts";
 
 import "./Home.css";
+import Statistics from "../../components/Statistics/index.tsx";
 
 function Home() {
   const currentDate = new Date();
@@ -148,8 +149,12 @@ function Home() {
         </div>
       </div>
 
+      <Statistics expenses={expensesFiltered} />
+
       <div style={{ marginBottom: "4rem" }}>
         <ExpenseList>
+            <div style={{ fontWeight: "bold", textAlign: "center"}}>Listado de egresos</div>
+
           {error && <p>Hubo un problema :</p>}
 
           {loading && <LoadingExpenses />}

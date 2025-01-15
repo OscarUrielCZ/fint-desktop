@@ -1,0 +1,14 @@
+.container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}

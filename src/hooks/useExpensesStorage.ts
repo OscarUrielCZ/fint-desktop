@@ -59,7 +59,6 @@ function useExpensesStorage(storageName: string) {
 
         // categorias
         const dbCategories: String[] = [...new Set(expenses.map(expense => expense.category))];
-        console.log(dbCategories);
 
         // guardar cambios
         setExpenses(dbExpenses);
@@ -83,12 +82,10 @@ function useExpensesStorage(storageName: string) {
             expense
         ];
         let newCategories: string[] = categories;
-        
-        console.log('agregando', expense.category);
 
         // validar si ya existe la categoría agregada
         let categoryExists = categories.filter((cat) => cat.toLowerCase() === expense.category.trim().toLowerCase());
-        console.log(categoryExists);
+        
         if (!categoryExists.length) {
             newCategories.push(expense.category.trim());
         }
