@@ -27,7 +27,7 @@ function Home() {
   });
 
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [periodSelected, setPeriodSelected] = useState(Period.YEAR);
+  const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
   const { categories, error, expensesFound, loading, openModal, updateData } =
     useContext(ExpensesContext);
