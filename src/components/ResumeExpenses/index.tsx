@@ -4,17 +4,17 @@ import { numberWithCommas } from "../../common/utils.ts";
 
 import "./ResumeExpenses.css";
 
-function ResumeExpenses({ expenses }) {
-  let expenseQuantity: number = 0;
-  let investmentQuantity: number = 0;
-  let expensesCount: number = expenses.length;
+type ResumeExpensesType = {
+  expenseQuantity: number;
+  investmentQuantity: number;
+  expensesCount: number;
+};
 
-  expenses.forEach((expense) => {
-    if (expense.category === "Inversión")
-      investmentQuantity += Number(expense.amount);
-    else expenseQuantity += Number(expense.amount);
-  });
-
+function ResumeExpenses({
+  expenseQuantity,
+  investmentQuantity,
+  expensesCount,
+}: ResumeExpensesType) {
   return (
     <div className="container">
       <span className="stat-sentence">

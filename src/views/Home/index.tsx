@@ -46,13 +46,27 @@ function Home() {
     })
     .sort((a, b) => b.date - a.date);
 
+  let expenseQuantity: number = 0;
+  let investmentQuantity: number = 0;
+  let expensesCount: number = expensesFiltered.length;
+
+  expensesFiltered.forEach((expense) => {
+    if (expense.category === "Inversión")
+      investmentQuantity += Number(expense.amount);
+    else expenseQuantity += Number(expense.amount);
+  });
+
   return (
     <div>
       <div>
         <ExpenseSearch />
       </div>
       <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-        <ResumeExpenses expenses={expensesFiltered} />
+        <ResumeExpenses
+          expenseQuantity={expenseQuantity}
+          investmentQuantity={investmentQuantity}
+          expensesCount={expensesCount}
+        />
       </div>
       <div>
         <Chip
@@ -149,17 +163,22 @@ function Home() {
         </div>
       </div>
 
-      <Statistics expenses={expensesFiltered} />
+      <Statistics
+        expenses={expensesFiltered}
+        totalAmount={expenseQuantity + investmentQuantity}
+      />
 
       <div style={{ marginBottom: "4rem" }}>
         <ExpenseList>
-            <div style={{ fontWeight: "bold", textAlign: "center"}}>Listado de egresos</div>
+          <div style={{ fontWeight: "bold", textAlign: "center" }}>
+            Listado de egresos
+          </div>
 
           {error && <p>Hubo un problema :</p>}
 
           {loading && <LoadingExpenses />}
 
-          {!loading && !error && expensesFiltered.length === 0 && (
+          {!loading && !error && expensesCount === 0 && (
             <p>Sin datos. Agrega uno nuevo</p>
           )}
 

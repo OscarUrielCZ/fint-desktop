@@ -1,40 +1,49 @@
-import React from 'react';
-import { Expense } from '../../common/types';
+import React from "react";
+import { Expense } from "../../common/types";
 
-import { numberWithCommas } from '../../common/utils.ts';
+import { numberWithCommas } from "../../common/utils.ts";
 
-import './Statistics.css';
+import "./Statistics.css";
 
-function Statistics({ expenses }: { expenses: Expense[] }) {
-    const expenseByCategory: object = expenses.reduce((acc, expense) => {
-        const { category } = expense;
-        
-        acc[category] = (acc[category] || 0) + Number(expense.amount);
-        return acc;
-    }, {});
+function Statistics({
+  expenses,
+  totalAmount,
+}: {
+  expenses: Expense[];
+  totalAmount: number;
+}) {
+  const expenseByCategory: object = expenses.reduce((acc, expense) => {
+    const { category } = expense;
 
-    // order expenseByCategory descending
-    const orderedExpenseByCategory = Object.entries(expenseByCategory).sort((a, b) => b[1] - a[1]);
+    acc[category] = (acc[category] || 0) + Number(expense.amount);
+    return acc;
+  }, {});
 
-    console.log(orderedExpenseByCategory);
+  // order expenseByCategory descending
+  const orderedExpenseByCategory = Object.entries(expenseByCategory).sort(
+    (a, b) => b[1] - a[1]
+  );
 
-    return (
-        <div className="container">
-            <span className="title">Categorías con mayores egresos</span>
-            <table>
-                {orderedExpenseByCategory.map(([category, amount]) => (
-                    <tr>
-                        <td>
-                        {category}
-                        </td>
-                        <td>
-                            ${numberWithCommas(amount)}
-                        </td>
-                    </tr>
-                ))}
-            </table>
-        </div>
-    );
+  console.log(orderedExpenseByCategory);
+
+  return (
+    <div className="container">
+      <span className="title">Categorías con mayores egresos</span>
+      <table>
+        <tbody>
+          {orderedExpenseByCategory.map(([category, amount]) => (
+            <tr key={category}>
+              <td>{category}</td>
+              <td style={{ textAlign: "right" }}>
+                {((amount * 100) / totalAmount).toFixed(1)}%
+              </td>
+              <td>${numberWithCommas(amount)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default Statistics;
