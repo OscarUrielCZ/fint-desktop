@@ -16,5 +16,14 @@ export type Expense = {
     date: Date,
     category: string,
     description: string,
-    status?: StorageStatus
+    status?: StorageStatus,
+    categoryId?: string,
+    subcategoryId?: string
 }
+
+export type Category = {
+    id: string,
+    value: string,
+    displayValue: string,
+    subcategories?: Category[]
+};

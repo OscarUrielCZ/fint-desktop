@@ -24,8 +24,6 @@ function Statistics({
     (a, b) => b[1] - a[1]
   );
 
-  console.log(orderedExpenseByCategory);
-
   return (
     <div className="container">
       <span className="title">Categorías con mayores egresos</span>

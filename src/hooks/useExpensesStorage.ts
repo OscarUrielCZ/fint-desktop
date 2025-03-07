@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import useFirestore from './useFirestore.ts';
-import { Expense, StorageStatus } from '../common/types.ts';
+import { Category, Expense, StorageStatus } from '../common/types.ts';
 
 function useExpensesStorage(storageName: string) {
     const [error, setError] = useState<string>('');
@@ -9,7 +9,7 @@ function useExpensesStorage(storageName: string) {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
 
-    const { getAllCollections, insertDocument, 
+    const { getCategories, getExpenses, insertDocument, 
         deleteDocument, updateDocument } = useFirestore();
 
     useEffect(() => {
@@ -55,21 +55,23 @@ function useExpensesStorage(storageName: string) {
             }
         });
 
-        const { expenses: dbExpenses } = await getAllCollections();
+        const expenseList = await getExpenses();
+        const categoryList = await getCategories();
 
         // categorias
-        const dbCategories: String[] = [...new Set(expenses.map(expense => expense.category))];
+        const dbCategories: string[] = [...new Set(expenses.map(expense => expense.category))];
 
         // guardar cambios
-        setExpenses(dbExpenses);
+        setExpenses(expenseList);
         setCategories(dbCategories);
-        saveData(dbExpenses, dbCategories);
+        saveData(expenseList, dbCategories, categoryList);
     }
 
-    const saveData = (expenses: Expense[], categories: string[]): void => {
+    const saveData = (expenses: Expense[], categories: string[], globalCategories: Category[]): void => {
         const data: object = {
             expenses,
-            categories
+            categories,
+            globalCategories
         };
 
         localStorage.setItem(storageName, JSON.stringify(data));

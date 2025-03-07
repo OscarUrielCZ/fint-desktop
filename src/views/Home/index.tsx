@@ -17,7 +17,6 @@ import { Period } from "../../common/types.ts";
 
 import "./Home.css";
 import Statistics from "../../components/Statistics/index.tsx";
-
 function Home() {
   const currentDate = new Date();
 

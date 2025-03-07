@@ -2,10 +2,12 @@ import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase
 
 import { db } from '../firebase';
 import { castFirebaseDate } from '../utils.ts';
+import { Category, Expense } from '../common/types.ts';
 
 function useFirestore() {
     enum DbCollections {
         EXPENSES = 'expenses',
+        CATEGORIES = 'categories'
     };
 
     const insertDocument = async (data: any, 
@@ -23,28 +25,55 @@ function useFirestore() {
         await updateDoc(doc(db, collectionName, id), data);
     }
 
-    const getAllCollections = async () => {
-        try {
-            // expenses
-            const expensesSnaps = await getDocs(collection(db, DbCollections.EXPENSES));
-            const expensesList = await Promise.all(expensesSnaps.docs.map(doc => 
-                ({ ...doc.data(), id: doc.id, date: castFirebaseDate(doc.data().date) }))
-            );
+    const getCategories: () => Promise<Category[]> = async () => {
+        const categorySnaps = await getDocs(collection(db, DbCollections.CATEGORIES));
+        const categoryList: Category[] = await Promise.all(categorySnaps.docs.map(async doc => {
+            const id: string = doc.id;
+            const data: any = doc.data();
+            const value: string = data.value;
+            const displayValue: string = data.displayValue;
+
+            const subcategorySnaps = await getDocs(collection(db, `${DbCollections.CATEGORIES}/${id}/subcategories`));
+            const subcategoryList = await Promise.all(subcategorySnaps.docs.map(doc =>
+                ({ id: doc.id, value: doc.data().value, displayValue: doc.data().displayValue })
+            ));
 
             return {
-                expenses: expensesList,
-            };
-        } catch(e) {
-            return {
-                expenses: [],
-                categories: []
+                id,
+                value,
+                displayValue,
+                subcategories: subcategoryList
             }
-        }
-        
+        }));
+
+        return categoryList;
+    }
+
+    const getExpenses: () => Promise<Expense[]> = async () => {
+        const expensesSnaps = await getDocs(collection(db, DbCollections.EXPENSES));
+        const expensesList: Expense[] = await Promise.all(expensesSnaps.docs.map(doc => {
+            const id = doc.id;
+            const data = doc.data();
+            const date = castFirebaseDate(data.date);
+
+            return {
+                id,
+                amount: data.amount,
+                date,
+                category: data.category,
+                description: data.description,
+                status: data.status,
+                categoryId: data.categoryId,
+                subcategoryId: data.subcategoryId
+            }
+        }));
+
+        return expensesList; 
     };
 
     return {
-        getAllCollections,
+        getCategories,
+        getExpenses,
         insertDocument,
         deleteDocument,
         updateDocument
