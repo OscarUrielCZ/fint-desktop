@@ -22,6 +22,7 @@ function ExpensesProvider(props) {
 
   const {
     categories,
+    categoriesAux,
     error,
     expenses,
     loading,
@@ -60,6 +61,7 @@ function ExpensesProvider(props) {
     <ExpensesContext.Provider
       value={{
         categories,
+        categoriesAux,
         error,
         expenses,
         expensesFound,

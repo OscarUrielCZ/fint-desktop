@@ -8,6 +8,7 @@ function useExpensesStorage(storageName: string) {
     const [loading, setLoading] = useState<boolean>(true);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
+    const [categoriesAux, setCategoriesAux] = useState<{[key: string]: Category}>({});
 
     const { getCategories, getExpenses, insertDocument, 
         deleteDocument, updateDocument } = useFirestore();
@@ -20,7 +21,8 @@ function useExpensesStorage(storageName: string) {
                 if(storage == null) {
                     parsedData = {
                         expenses: [],
-                        categories: []
+                        categories: [],
+                        categoriesAux: {}
                     };
                     localStorage.setItem(storageName, JSON.stringify(parsedData));
                 } else {
@@ -28,12 +30,13 @@ function useExpensesStorage(storageName: string) {
                 }
                 setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) })));
                 setCategories(parsedData.categories);
+                setCategoriesAux(parsedData.globalCategories);
             } catch(e) {
                 setError(e);
             } finally {
                 setLoading(false);
             }
-        }, 1500);
+        }, 500);
     }, [storageName]);
 
     const updateData = async () => {
@@ -56,18 +59,20 @@ function useExpensesStorage(storageName: string) {
         });
 
         const expenseList = await getExpenses();
-        const categoryList = await getCategories();
+        const categoryData = await getCategories();
 
         // categorias
         const dbCategories: string[] = [...new Set(expenses.map(expense => expense.category))];
 
-        // guardar cambios
+        // update and save data
         setExpenses(expenseList);
         setCategories(dbCategories);
-        saveData(expenseList, dbCategories, categoryList);
+        setCategoriesAux(categoryData);
+
+        saveData(expenseList, dbCategories, categoryData);
     }
 
-    const saveData = (expenses: Expense[], categories: string[], globalCategories: Category[]): void => {
+    const saveData = (expenses: Expense[], categories: string[], globalCategories: {[key: string]: Category}): void => {
         const data: object = {
             expenses,
             categories,
@@ -94,7 +99,7 @@ function useExpensesStorage(storageName: string) {
         
         setExpenses(newExpenses);
         setCategories(newCategories);
-        saveData(newExpenses, categories);
+        saveData(newExpenses, newCategories, categoriesAux);
     };
 
     const deleteExpense = (id: string): void => {
@@ -112,7 +117,7 @@ function useExpensesStorage(storageName: string) {
         });
 
         setExpenses(updatedExpenses);
-        saveData(updatedExpenses, categories);
+        saveData(updatedExpenses, categories, categoriesAux);
     };
 
     const updateExpense = (updatedExpense: Expense): void => {
@@ -125,10 +130,10 @@ function useExpensesStorage(storageName: string) {
             return expense;
         });
         setExpenses(updatedExpenses);
-        saveData(updatedExpenses, categories);
+        saveData(updatedExpenses, categories, categoriesAux);
     };
 
-    return { expenses, categories, loading, error,
+    return { expenses, categories, categoriesAux, loading, error,
         insertExpense, deleteExpense, updateExpense, updateData };
 }
 

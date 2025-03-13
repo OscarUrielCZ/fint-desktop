@@ -25,5 +25,5 @@ export type Category = {
     id: string,
     value: string,
     displayValue: string,
-    subcategories?: Category[]
+    subcategories?: { [key: string]: Category }
 };

@@ -3,6 +3,7 @@ import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase
 import { db } from '../firebase';
 import { castFirebaseDate } from '../utils.ts';
 import { Category, Expense } from '../common/types.ts';
+import { createCategoryJson } from '../common/utils.ts';
 
 function useFirestore() {
     enum DbCollections {
@@ -25,7 +26,7 @@ function useFirestore() {
         await updateDoc(doc(db, collectionName, id), data);
     }
 
-    const getCategories: () => Promise<Category[]> = async () => {
+    const getCategories: () => Promise<{[key: string]: Category}> = async () => {
         const categorySnaps = await getDocs(collection(db, DbCollections.CATEGORIES));
         const categoryList: Category[] = await Promise.all(categorySnaps.docs.map(async doc => {
             const id: string = doc.id;
@@ -37,16 +38,17 @@ function useFirestore() {
             const subcategoryList = await Promise.all(subcategorySnaps.docs.map(doc =>
                 ({ id: doc.id, value: doc.data().value, displayValue: doc.data().displayValue })
             ));
+            const subcategoryJson = createCategoryJson(subcategoryList);
 
             return {
                 id,
                 value,
                 displayValue,
-                subcategories: subcategoryList
+                subcategories: subcategoryJson
             }
         }));
 
-        return categoryList;
+        return createCategoryJson(categoryList);
     }
 
     const getExpenses: () => Promise<Expense[]> = async () => {
@@ -63,7 +65,7 @@ function useFirestore() {
                 category: data.category,
                 description: data.description,
                 status: data.status,
-                categoryId: data.categoryId,
+                categoryId: data.category_id,
                 subcategoryId: data.subcategoryId
             }
         }));

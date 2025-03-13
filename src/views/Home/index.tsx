@@ -28,8 +28,15 @@ function Home() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
-  const { categories, error, expensesFound, loading, openModal, updateData } =
-    useContext(ExpensesContext);
+  const {
+    categories,
+    categoriesAux,
+    error,
+    expensesFound,
+    loading,
+    openModal,
+    updateData,
+  } = useContext(ExpensesContext);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
@@ -182,7 +189,11 @@ function Home() {
           )}
 
           {expensesFiltered.map((exp) => (
-            <ExpenseItem key={exp.id} expense={exp} />
+            <ExpenseItem
+              key={exp.id}
+              category={categoriesAux[exp.categoryId]}
+              expense={exp}
+            />
           ))}
         </ExpenseList>
 
