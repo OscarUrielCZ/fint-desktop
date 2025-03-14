@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
 import { NumericFormat } from "react-number-format";
 
 import {
@@ -17,6 +16,7 @@ import {
 import { ExpensesContext } from "../../context/ExpensesContext";
 import { toDateObject } from "../../utils.ts";
 import { Expense } from "../../common/types.ts";
+import { generateRandomId } from "../../common/utils.ts";
 
 function Create() {
   const navigate = useNavigate();
@@ -47,16 +47,8 @@ function Create() {
     });
   };
 
-  // TODO: mejorar la generación de ids
-  const generateTempIndex = (description, date) => {
-    return description.replace(" ", "_") + moment(date).format("YYYY-MM-DD");
-  };
-
   const onSubmit = (event) => {
     event.preventDefault();
-
-    console.log(expense);
-    console.log(selectedCategoryId, selectedSubcategoryId);
 
     // validations
     if (!selectedCategoryId) {
@@ -82,11 +74,12 @@ function Create() {
     } else {
       // es nuevo
       newExpense.date = toDateObject(expense.date);
-      newExpense.id = generateTempIndex(expense.description, newExpense.date);
+      newExpense.id = generateRandomId();
       insertExpense(newExpense);
     }
 
-    navigate(-1);
+    // TODO: factorizar rutas en un archivo general routes.js
+    navigate("/fint-desktop/");
   };
 
   return (
@@ -117,7 +110,9 @@ function Create() {
 
         <NumericFormat
           value={expense.amount}
-          onChange={onChange}
+          onValueChange={({ floatValue }) =>
+            setExpense({ ...expense, amount: floatValue })
+          }
           name="amount"
           customInput={TextField}
           variant="standard"

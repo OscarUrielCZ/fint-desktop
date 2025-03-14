@@ -23,10 +23,6 @@ function ExpenseItem({ category, expense }) {
   const subcategoryName =
     category?.subcategories[subcategoryId]?.displayValue || "Sin subcategoría";
 
-  if (subcategoryId) {
-    console.log(description, date, subcategoryName);
-  }
-
   return (
     <div style={{ borderRadius: "1rem" }}>
       <div className="ExpenseItem">
