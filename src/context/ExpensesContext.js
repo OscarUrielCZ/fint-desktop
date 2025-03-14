@@ -9,7 +9,8 @@ const ExpensesContext = createContext();
 const STORAGE_ID = "fint_V2";
 
 const defaultExpense = {
-  category: "",
+  categoryId: "",
+  subcategoryId: "",
   description: "",
   amount: "",
   date: moment(new Date()).format("YYYY-MM-DD"),

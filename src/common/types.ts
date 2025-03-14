@@ -10,11 +10,12 @@ export enum Period {
     FULL
 }
 
+// TODO: revisar tipos de Expense (de creacion, actualizacion, etc)
 export type Expense = {
     id: string,
     amount: number,
     date: Date,
-    category: string,
+    category?: string,
     description: string,
     status?: StorageStatus,
     categoryId?: string,

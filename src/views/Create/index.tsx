@@ -1,8 +1,10 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
 
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -14,21 +16,29 @@ import {
 
 import { ExpensesContext } from "../../context/ExpensesContext";
 import { toDateObject } from "../../utils.ts";
+import { Expense } from "../../common/types.ts";
 
 function Create() {
+  const navigate = useNavigate();
   const {
     categoriesAux: categories,
     formExpense,
     insertExpense,
-    setOpenModal,
     updateExpense,
   } = useContext(ExpensesContext);
 
+  const [error, setError] = useState<string>("");
+  // TODO: revisar el tipo expense
   const [expense, setExpense] = useState(formExpense);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedSubcategoryId, setSelectedSubcategoryId] =
+    useState<string>("");
 
-  console.log({ selectedCategoryId });
-  console.log(categories[selectedCategoryId]?.subcategories || "Nada");
+  const subcategories = categories[selectedCategoryId]?.subcategories;
+
+  const onCancel = () => {
+    navigate(-1);
+  };
 
   const onChange = (e) => {
     setExpense({
@@ -37,11 +47,7 @@ function Create() {
     });
   };
 
-  const onCancel = () => {
-    // setOpenModal(false);
-    console.log("cancel");
-  };
-
+  // TODO: mejorar la generación de ids
   const generateTempIndex = (description, date) => {
     return description.replace(" ", "_") + moment(date).format("YYYY-MM-DD");
   };
@@ -49,21 +55,38 @@ function Create() {
   const onSubmit = (event) => {
     event.preventDefault();
 
-    console.log("submit");
+    console.log(expense);
+    console.log(selectedCategoryId, selectedSubcategoryId);
 
-    // if (expense.id !== undefined) {
-    //   // ya existe, i.e. es actualización
-    //   let updatedExpense = expense;
-    //   updatedExpense.date = toDateObject(expense.date);
-    //   updateExpense(updatedExpense);
-    // } else {
-    //   // es nuevo
-    //   let newExpense = expense;
-    //   newExpense.date = toDateObject(expense.date);
-    //   newExpense.id = generateTempIndex(expense.description, newExpense.date);
-    //   insertExpense(newExpense);
-    // }
-    // setOpenModal(false);
+    // validations
+    if (!selectedCategoryId) {
+      setError("Debe seleccionar una categoría");
+      return;
+    }
+    if (!selectedSubcategoryId && Object.keys(subcategories).length > 0) {
+      setError("Debe seleccionar una subcategoría");
+      return;
+    }
+    setError("");
+
+    let newExpense: Expense = {
+      ...expense,
+      categoryId: selectedCategoryId,
+      subcategoryId: selectedSubcategoryId,
+    };
+
+    if (newExpense.id !== undefined) {
+      // ya existe, i.e. es actualización
+      newExpense.date = toDateObject(expense.date);
+      updateExpense(newExpense);
+    } else {
+      // es nuevo
+      newExpense.date = toDateObject(expense.date);
+      newExpense.id = generateTempIndex(expense.description, newExpense.date);
+      insertExpense(newExpense);
+    }
+
+    navigate(-1);
   };
 
   return (
@@ -72,56 +95,65 @@ function Create() {
         Registrar egreso
       </Typography>
 
-      <CategoryPicker
-        categories={categories}
-        selectedCategory={selectedCategoryId}
-        setSelectedCategory={setSelectedCategoryId}
-      />
+      {error && <Alert severity="error">{error}</Alert>}
 
-      {selectedCategoryId.length !== 0 &&
-        categories[selectedCategoryId].subcategories && (
-          <Typography variant="h6" textAlign="center">
-            Hola
-          </Typography>
-        )}
+      <Box sx={{ px: 1 }}>
+        <CategoryPicker
+          title="Categoría"
+          categories={categories}
+          selectedCategory={selectedCategoryId}
+          setSelectedCategory={setSelectedCategoryId}
+        />
 
-      <NumericFormat
-        value={expense.amount}
-        onChange={onChange}
-        name="amount"
-        customInput={TextField}
-        variant="standard"
-        label="Cantidad"
-        sx={{ width: "100%", mt: 2 }}
-        decimalScale={2}
-        thousandSeparator
-        valueIsNumericString
-        prefix="$"
-        required
-      />
-      <TextField
-        value={expense.date}
-        onChange={onChange}
-        name="date"
-        type="date"
-        variant="standard"
-        label="Fecha"
-        sx={{ width: "100%", mt: 2 }}
-        required
-      />
-      <TextField
-        value={expense.description}
-        onChange={onChange}
-        name="description"
-        variant="standard"
-        label="Descripción (opcional)"
-        sx={{ width: "100%", mt: 2 }}
-      />
+        {selectedCategoryId.length !== 0 &&
+          Object.keys(subcategories).length > 0 && (
+            <CategoryPicker
+              title="Subcategoría"
+              categories={subcategories}
+              selectedCategory={selectedSubcategoryId}
+              setSelectedCategory={setSelectedSubcategoryId}
+            />
+          )}
+
+        <NumericFormat
+          value={expense.amount}
+          onChange={onChange}
+          name="amount"
+          customInput={TextField}
+          variant="standard"
+          label="Cantidad"
+          sx={{ width: "100%", mt: 2 }}
+          decimalScale={2}
+          thousandSeparator
+          valueIsNumericString
+          prefix="$"
+          required
+        />
+        <TextField
+          value={expense.date}
+          onChange={onChange}
+          name="date"
+          type="date"
+          variant="standard"
+          label="Fecha"
+          sx={{ width: "100%", mt: 2 }}
+          required
+        />
+        <TextField
+          value={expense.description}
+          onChange={onChange}
+          name="description"
+          variant="standard"
+          label="Descripción (opcional)"
+          sx={{ width: "100%", mt: 2 }}
+        />
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          mt: 2,
+          my: 2,
+          px: 1,
         }}
       >
         <Button variant="contained" color="error" onClick={onCancel}>
@@ -144,39 +176,50 @@ const CategoryPicker = ({
   categories,
   selectedCategory,
   setSelectedCategory,
+  title,
 }) => {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(max(100px, 30%), 1fr))",
-        gap: 1,
-      }}
-    >
-      {Object.entries(categories).map(([id, category]: [string, any]) => (
-        <Card key={id}>
-          <CardActionArea>
-            <CardContent
-              onClick={() => setSelectedCategory(id)}
-              data-active={selectedCategory === id ? "" : undefined}
-              sx={{
-                height: "100%",
-                "&[data-active]": {
-                  backgroundColor: "action.selected",
-                  "&:hover": {
-                    backgroundColor: "action.selectedHover",
+    <Box sx={{ mt: 2 }}>
+      <Typography>{title}</Typography>
+      <Box
+        sx={{
+          width: "100%",
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(max(100px, 30%), 1fr))",
+          gap: 1,
+        }}
+      >
+        {Object.entries(categories).map(([id, category]: [string, any]) => (
+          <Card
+            key={id}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <CardActionArea>
+              <CardContent
+                onClick={() => setSelectedCategory(id)}
+                data-active={selectedCategory === id ? "" : undefined}
+                sx={{
+                  height: "100%",
+                  "&[data-active]": {
+                    backgroundColor: "action.selected",
+                    "&:hover": {
+                      backgroundColor: "action.selectedHover",
+                    },
                   },
-                },
-              }}
-            >
-              <Typography textAlign="center">
-                {category.displayValue}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      ))}
+                }}
+              >
+                <Typography textAlign="center">
+                  {category.displayValue}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
+      </Box>
     </Box>
   );
 };

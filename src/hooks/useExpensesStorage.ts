@@ -90,15 +90,8 @@ function useExpensesStorage(storageName: string) {
         ];
         let newCategories: string[] = categories;
 
-        // validar si ya existe la categoría agregada
-        let categoryExists = categories.filter((cat) => cat.toLowerCase() === expense.category.trim().toLowerCase());
-        
-        if (!categoryExists.length) {
-            newCategories.push(expense.category.trim());
-        }
-        
         setExpenses(newExpenses);
-        setCategories(newCategories);
+        
         saveData(newExpenses, newCategories, categoriesAux);
     };
 
