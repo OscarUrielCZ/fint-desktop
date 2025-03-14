@@ -9,6 +9,7 @@ import Home from "./views/Home/index.tsx";
 import NotFound from "./views/NotFound/index.tsx";
 import Registry from "./views/Registry/index.tsx";
 import Login from "./views/Login/index.tsx";
+import Create from "./views/Create/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "fint-desktop/login",
         element: <Login />,
+      },
+      {
+        path: "fint-desktop/create",
+        element: <Create />,
       },
       {
         path: "fint-desktop/registro",

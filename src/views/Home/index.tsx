@@ -17,6 +17,7 @@ import { Period } from "../../common/types.ts";
 
 import "./Home.css";
 import Statistics from "../../components/Statistics/index.tsx";
+import { Link } from "react-router-dom";
 function Home() {
   const currentDate = new Date();
 
@@ -64,6 +65,7 @@ function Home() {
 
   return (
     <div>
+      <Link to="create">Registrar</Link>
       <div>
         <ExpenseSearch />
       </div>
