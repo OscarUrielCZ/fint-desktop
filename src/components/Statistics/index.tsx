@@ -1,21 +1,25 @@
 import React from "react";
-import { Expense } from "../../common/types";
+import { Category, Expense } from "../../common/types";
 
 import { numberWithCommas } from "../../common/utils.ts";
 
 import "./Statistics.css";
 
 function Statistics({
+  categories,
   expenses,
   totalAmount,
 }: {
+  categories: { [key: string]: Category };
   expenses: Expense[];
   totalAmount: number;
 }) {
   const expenseByCategory: object = expenses.reduce((acc, expense) => {
-    const { category } = expense;
-
-    acc[category] = (acc[category] || 0) + Number(expense.amount);
+    const { categoryId } = expense;
+    const categoryName = categoryId
+      ? categories[categoryId]?.displayValue
+      : "Sin categoría";
+    acc[categoryName] = (acc[categoryName] || 0) + Number(expense.amount);
     return acc;
   }, {});
 
@@ -31,8 +35,8 @@ function Statistics({
         <tbody>
           {orderedExpenseByCategory.map(([category, amount]) => (
             <tr key={category}>
-              <td>{category}</td>
-              <td style={{ textAlign: "right" }}>
+              <td style={{ textAlign: "right" }}>{category}</td>
+              <td style={{ textAlign: "center" }}>
                 {((amount * 100) / totalAmount).toFixed(1)}%
               </td>
               <td>${numberWithCommas(amount)}</td>

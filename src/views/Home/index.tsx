@@ -172,6 +172,7 @@ function Home() {
       </div>
 
       <Statistics
+        categories={categoriesAux}
         expenses={expensesFiltered}
         totalAmount={expenseQuantity + investmentQuantity}
       />
