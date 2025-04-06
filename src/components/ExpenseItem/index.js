@@ -3,8 +3,10 @@ import "./ExpenseItem.css";
 
 import { ExpensesContext } from "../../context/ExpensesContext";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function ExpenseItem({ category, expense }) {
+  const navigate = useNavigate();
   const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
   const {
     id,
@@ -14,6 +16,10 @@ function ExpenseItem({ category, expense }) {
     category: oldCategory,
     subcategoryId,
   } = expense;
+
+  const editExpense = (id) => {
+    navigate(`/fint-desktop/update/${id}`);
+  };
 
   const getFormattedDate = (date) => {
     return moment(date).format("DD/MM/YYYY");
@@ -48,10 +54,7 @@ function ExpenseItem({ category, expense }) {
         <span className="delete" onClick={() => deleteExpense(id)}>
           Eliminar
         </span>
-        <span
-          className="update"
-          onClick={() => openUpdateExpenseModal(expense)}
-        >
+        <span className="update" onClick={() => editExpense(expense.id)}>
           Modificar
         </span>
       </div>

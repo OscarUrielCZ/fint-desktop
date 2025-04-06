@@ -12,29 +12,39 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 
 import { ExpensesContext } from "../../context/ExpensesContext";
 import { toDateObject } from "../../utils.ts";
 import { Expense } from "../../common/types.ts";
 import { generateRandomId } from "../../common/utils.ts";
 
-function Create() {
+const emptyExpense = {
+  id: null,
+  categoryId: "",
+  subcategoryId: "",
+  description: "",
+  amount: "",
+  date: moment(new Date()).format("YYYY-MM-DD"),
+};
+
+/**
+ * Componente vista que sirve para crear nuevos egresos o también para editar ya existentes.
+ * Para edición, se obtiene desde la url el ID del egreso a editar.
+ */
+function Create({ updatingExpense }: { updatingExpense: unknown }) {
   const navigate = useNavigate();
   const {
     categoriesAux: categories,
-    formExpense,
     insertExpense,
     updateExpense,
   } = useContext(ExpensesContext);
 
   const [error, setError] = useState<string>("");
   // TODO: revisar el tipo expense
-  const [expense, setExpense] = useState(formExpense);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
-  const [selectedSubcategoryId, setSelectedSubcategoryId] =
-    useState<string>("");
+  const [expense, setExpense] = useState<any>(updatingExpense || emptyExpense);
 
-  const subcategories = categories[selectedCategoryId]?.subcategories;
+  const subcategories = categories[expense.categoryId]?.subcategories;
 
   const onCancel = () => {
     navigate(-1);
@@ -51,23 +61,19 @@ function Create() {
     event.preventDefault();
 
     // validations
-    if (!selectedCategoryId) {
+    if (!expense.categoryId) {
       setError("Debe seleccionar una categoría");
       return;
     }
-    if (!selectedSubcategoryId && Object.keys(subcategories).length > 0) {
+    if (!expense.subcategoryId && Object.keys(subcategories).length > 0) {
       setError("Debe seleccionar una subcategoría");
       return;
     }
     setError("");
 
-    let newExpense: Expense = {
-      ...expense,
-      categoryId: selectedCategoryId,
-      subcategoryId: selectedSubcategoryId,
-    };
+    let newExpense = expense;
 
-    if (newExpense.id !== undefined) {
+    if (newExpense.id !== null) {
       // ya existe, i.e. es actualización
       newExpense.date = toDateObject(expense.date);
       updateExpense(newExpense);
@@ -78,8 +84,24 @@ function Create() {
       insertExpense(newExpense);
     }
 
+    console.log(newExpense);
+
     // TODO: factorizar rutas en un archivo general routes.js
     navigate("/fint-desktop/");
+  };
+
+  const onSelectCategoryId = (id: string) => {
+    setExpense({
+      ...expense,
+      categoryId: id,
+    });
+  };
+
+  const onSelectSubcategoryId = (id: string) => {
+    setExpense({
+      ...expense,
+      subcategoryId: id,
+    });
   };
 
   return (
@@ -94,17 +116,17 @@ function Create() {
         <CategoryPicker
           title="Categoría"
           categories={categories}
-          selectedCategory={selectedCategoryId}
-          setSelectedCategory={setSelectedCategoryId}
+          selectedCategory={expense.categoryId}
+          setSelectedCategory={onSelectCategoryId}
         />
 
-        {selectedCategoryId.length !== 0 &&
+        {expense.categoryId.length !== 0 &&
           Object.keys(subcategories).length > 0 && (
             <CategoryPicker
               title="Subcategoría"
               categories={subcategories}
-              selectedCategory={selectedSubcategoryId}
-              setSelectedCategory={setSelectedSubcategoryId}
+              selectedCategory={expense.subcategoryId}
+              setSelectedCategory={onSelectSubcategoryId}
             />
           )}
 
