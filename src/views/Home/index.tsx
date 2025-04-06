@@ -18,6 +18,7 @@ import { Period } from "../../common/types.ts";
 import "./Home.css";
 import Statistics from "../../components/Statistics/index.tsx";
 import { Link } from "react-router-dom";
+import { Alert } from "@mui/material";
 function Home() {
   const currentDate = new Date();
 
@@ -56,16 +57,27 @@ function Home() {
   let expenseQuantity: number = 0;
   let investmentQuantity: number = 0;
   let expensesCount: number = expensesFiltered.length;
+  let noCatQuantity: number = 0;
 
   expensesFiltered.forEach((expense) => {
-    if (expense.category === "Inversión")
-      investmentQuantity += Number(expense.amount);
-    else expenseQuantity += Number(expense.amount);
+    if (!expense.categoryId) {
+      noCatQuantity += 1;
+    } else {
+      if (expense.categoryId === "DxsSPujNFFhSJt1C0Qe2")
+        // inversión
+        investmentQuantity += Number(expense.amount);
+      else expenseQuantity += Number(expense.amount);
+    }
   });
 
   return (
     <div>
       <Link to="create">Registrar</Link>
+      {noCatQuantity > 0 && (
+        <Alert severity="warning">
+          ATENCIÓN: {noCatQuantity} regs. sin categoría
+        </Alert>
+      )}
       <div>
         <ExpenseSearch />
       </div>
