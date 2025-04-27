@@ -84,8 +84,6 @@ function Create({ updatingExpense }: { updatingExpense: unknown }) {
       insertExpense(newExpense);
     }
 
-    console.log(newExpense);
-
     // TODO: factorizar rutas en un archivo general routes.js
     navigate("/fint-desktop/");
   };

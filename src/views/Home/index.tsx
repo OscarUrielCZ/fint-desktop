@@ -42,12 +42,6 @@ function Home() {
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
-      try {
-        expense.date.getMonth();
-      } catch (e) {
-        console.log("falla el mes wey", expense);
-        return false;
-      }
       return (
         (periodSelected === Period.FULL ||
           (periodSelected === Period.MONTH &&
@@ -59,8 +53,6 @@ function Home() {
       );
     })
     .sort((a, b) => b.date - a.date);
-
-  console.log(expensesFiltered);
 
   let expenseQuantity: number = 0;
   let investmentQuantity: number = 0;
