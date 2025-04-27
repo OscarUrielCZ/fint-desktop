@@ -23,9 +23,13 @@ function Update() {
     );
   }
 
-  updatingExpense.date = moment(updatingExpense.date).format("YYYY-MM-DD");
+  const tempExpense = {
+    ...updatingExpense,
+    date: moment(updatingExpense.date).format("YYYY-MM-DD"),
+  };
+  // updatingExpense.date = moment(updatingExpense.date).format("YYYY-MM-DD");
 
-  return <Create updatingExpense={updatingExpense} />;
+  return <Create updatingExpense={tempExpense} />;
 }
 
 export default Update;

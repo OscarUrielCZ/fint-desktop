@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import AddButton from "../../components/AddButton/";
+// import AddButton from "../../components/AddButton/";
 import AddExpenseForm from "../../components/AddExpenseForm/";
 import Chip from "../../components/Chip/index.tsx";
 import ExpenseSearch from "../../components/ExpenseSearch/";
@@ -18,7 +18,7 @@ import { Period } from "../../common/types.ts";
 import "./Home.css";
 import Statistics from "../../components/Statistics/index.tsx";
 import { Link } from "react-router-dom";
-import { Alert } from "@mui/material";
+import { Alert, Box, Button } from "@mui/material";
 function Home() {
   const currentDate = new Date();
 
@@ -42,6 +42,12 @@ function Home() {
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
+      try {
+        expense.date.getMonth();
+      } catch (e) {
+        console.log("falla el mes wey", expense);
+        return false;
+      }
       return (
         (periodSelected === Period.FULL ||
           (periodSelected === Period.MONTH &&
@@ -53,6 +59,8 @@ function Home() {
       );
     })
     .sort((a, b) => b.date - a.date);
+
+  console.log(expensesFiltered);
 
   let expenseQuantity: number = 0;
   let investmentQuantity: number = 0;
@@ -72,12 +80,16 @@ function Home() {
 
   return (
     <div>
-      <Link to="create">Registrar</Link>
       {noCatQuantity > 0 && (
         <Alert severity="warning">
           ATENCIÓN: {noCatQuantity} regs. sin categoría
         </Alert>
       )}
+      <div>
+        <button className="btn-update" onClick={updateData}>
+          Actualizar información
+        </button>
+      </div>
       <div>
         <ExpenseSearch />
       </div>
@@ -218,13 +230,15 @@ function Home() {
           </Modal>
         )}
 
-        <AddButton />
+        {/* <AddButton /> */}
       </div>
-      <div className="bottom-pinned">
-        <button className="btn-update" onClick={updateData}>
-          Actualizar información
-        </button>
-      </div>
+      <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
+        <Button variant="contained" fullWidth>
+          <Link to="create" style={{ color: "white", textDecoration: "none" }}>
+            Registrar
+          </Link>
+        </Button>
+      </Box>
     </div>
   );
 }

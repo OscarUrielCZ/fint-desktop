@@ -50,6 +50,7 @@ function useExpensesStorage(storageName: string) {
             } else if (expense.status === StorageStatus.DELETED) {
                 await deleteDocument(expense.id);
             } else if (expense.status === StorageStatus.UPDATED) {
+                console.log("updating", expense);
                 let tempExpense: Expense = expense;
                 const id: string = tempExpense.id;
                 delete tempExpense.id;

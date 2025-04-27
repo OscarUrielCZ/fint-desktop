@@ -4,6 +4,7 @@ import "./ExpenseItem.css";
 import { ExpensesContext } from "../../context/ExpensesContext";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 
 function ExpenseItem({ category, expense }) {
   const navigate = useNavigate();
@@ -25,19 +26,16 @@ function ExpenseItem({ category, expense }) {
     return moment(date).format("DD/MM/YYYY");
   };
 
-  const categoryName = category?.displayValue || "Sin categoría";
-  const subcategoryName =
-    category?.subcategories[subcategoryId]?.displayValue || "Sin subcategoría";
-
   return (
     <div style={{ borderRadius: "1rem" }}>
       <div className="ExpenseItem">
         <div>
           <span className="name">{description}</span>
-          <span className="category"> ({oldCategory})</span>
-          <span className="category">
-            {categoryName} {subcategoryName}
-          </span>
+          <CategoryPanel
+            category={category}
+            subcategoryId={subcategoryId}
+            oldCategory={oldCategory}
+          />
         </div>
         <div
           style={{
@@ -61,5 +59,23 @@ function ExpenseItem({ category, expense }) {
     </div>
   );
 }
+
+const CategoryPanel = ({ category, subcategoryId, oldCategory }) => {
+  const categoryName = category?.displayValue || "?";
+  const subcategoryName =
+    category?.subcategories[subcategoryId]?.displayValue || "";
+
+  return (
+    <Box>
+      {!Boolean(category) ? (
+        <Typography color="red">Missing {oldCategory}</Typography>
+      ) : (
+        <Typography>
+          {categoryName} - {subcategoryName}
+        </Typography>
+      )}
+    </Box>
+  );
+};
 
 export default ExpenseItem;

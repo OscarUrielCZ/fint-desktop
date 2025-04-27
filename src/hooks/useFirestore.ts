@@ -65,7 +65,7 @@ function useFirestore() {
                 category: data.category,
                 description: data.description,
                 status: data.status,
-                categoryId: data.category_id,
+                categoryId: data.categoryId,
                 subcategoryId: data.subcategoryId
             }
         }));

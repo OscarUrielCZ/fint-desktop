@@ -16,7 +16,7 @@ import moment from "moment";
 
 import { ExpensesContext } from "../../context/ExpensesContext";
 import { toDateObject } from "../../utils.ts";
-import { Expense } from "../../common/types.ts";
+// import { Expense } from "../../common/types.ts";
 import { generateRandomId } from "../../common/utils.ts";
 
 const emptyExpense = {
@@ -120,7 +120,9 @@ function Create({ updatingExpense }: { updatingExpense: unknown }) {
           setSelectedCategory={onSelectCategoryId}
         />
 
-        {expense.categoryId.length !== 0 &&
+        {/* aparecen subcategorías si hay categoría seleccionada */}
+        {Boolean(expense.categoryId) &&
+          expense.categoryId.length !== 0 &&
           Object.keys(subcategories).length > 0 && (
             <CategoryPicker
               title="Subcategoría"
