@@ -2,10 +2,9 @@ import React, { useState, createContext } from "react";
 
 import moment from "moment";
 
-import useExpensesStorage from "../hooks/useExpensesStorage.ts";
+import useStorage from "../hooks/useStorage.ts";
 import { StorageStatus } from "../common/types.ts";
 
-const ExpensesContext = createContext();
 const STORAGE_ID = "fint_V2";
 
 const defaultExpense = {
@@ -16,6 +15,7 @@ const defaultExpense = {
   date: moment(new Date()).format("YYYY-MM-DD"),
 };
 
+const ExpensesContext = createContext();
 function ExpensesProvider(props) {
   const [formExpense, setFormExpense] = useState(defaultExpense);
   const [openModal, setOpenModal] = useState(false);
@@ -23,15 +23,13 @@ function ExpensesProvider(props) {
 
   const {
     categories,
-    categoriesAux,
-    error,
     expenses,
     loading,
     deleteExpense,
     insertExpense,
-    updateData,
+    syncData,
     updateExpense,
-  } = useExpensesStorage(STORAGE_ID);
+  } = useStorage(STORAGE_ID);
 
   const clearExpenseForm = () => {
     setFormExpense(defaultExpense);
@@ -62,8 +60,6 @@ function ExpensesProvider(props) {
     <ExpensesContext.Provider
       value={{
         categories,
-        categoriesAux,
-        error,
         expenses,
         expensesFound,
         formExpense,
@@ -77,7 +73,7 @@ function ExpensesProvider(props) {
         openUpdateExpenseModal,
         setOpenModal,
         setSearchValue,
-        updateData,
+        syncData,
         updateExpense,
       }}
     >

@@ -1,7 +1,7 @@
 export enum StorageStatus {
+    DELETED,
     NEW,
     UPDATED,
-    DELETED
 }
 
 export enum Period {

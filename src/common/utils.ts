@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { Category } from "./types";
+import { CategoriesMap } from "../models/Category.dto";
 
-export function createCategoryJson(categories: Category[]): {[key: string]: Category} {
+export function createCategoryJson(categories: Category[]): CategoriesMap {
     return categories.reduce((acc, category) => {
         acc[category.id] = category;
         return acc;

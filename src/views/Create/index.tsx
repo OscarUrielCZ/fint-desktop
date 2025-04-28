@@ -34,11 +34,8 @@ const emptyExpense = {
  */
 function Create({ updatingExpense }: { updatingExpense: unknown }) {
   const navigate = useNavigate();
-  const {
-    categoriesAux: categories,
-    insertExpense,
-    updateExpense,
-  } = useContext(ExpensesContext);
+  const { categories, insertExpense, updateExpense } =
+    useContext(ExpensesContext);
 
   const [error, setError] = useState<string>("");
   // TODO: revisar el tipo expense

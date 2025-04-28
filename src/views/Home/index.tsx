@@ -5,7 +5,7 @@ import AddExpenseForm from "../../components/AddExpenseForm/";
 import Chip from "../../components/Chip/index.tsx";
 import ExpenseSearch from "../../components/ExpenseSearch/";
 import ExpenseList from "../../components/ExpenseList/";
-import ExpenseItem from "../../components/ExpenseItem/";
+import ExpenseItem from "../../components/ExpenseItem/ExpenseItem.tsx";
 import LoadingExpenses from "../../components/LoadingExpenses/";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
@@ -30,15 +30,8 @@ function Home() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
-  const {
-    categories,
-    categoriesAux,
-    error,
-    expensesFound,
-    loading,
-    openModal,
-    updateData,
-  } = useContext(ExpensesContext);
+  const { categories, expensesFound, loading, openModal, syncData } =
+    useContext(ExpensesContext);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
@@ -78,7 +71,7 @@ function Home() {
         </Alert>
       )}
       <div>
-        <button className="btn-update" onClick={updateData}>
+        <button className="btn-update" onClick={syncData}>
           Actualizar información
         </button>
       </div>
@@ -171,7 +164,7 @@ function Home() {
           </div>
         )}
 
-        <div>
+        {/* <div>
           <span>Selecciona una categoría </span>
           <select
             name="category-filter"
@@ -184,11 +177,11 @@ function Home() {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
       </div>
 
       <Statistics
-        categories={categoriesAux}
+        categories={categories}
         expenses={expensesFiltered}
         totalAmount={expenseQuantity + investmentQuantity}
       />
@@ -199,18 +192,16 @@ function Home() {
             Listado de egresos
           </div>
 
-          {error && <p>Hubo un problema :</p>}
-
           {loading && <LoadingExpenses />}
 
-          {!loading && !error && expensesCount === 0 && (
+          {!loading && expensesCount === 0 && (
             <p>Sin datos. Agrega uno nuevo</p>
           )}
 
           {expensesFiltered.map((exp) => (
             <ExpenseItem
               key={exp.id}
-              category={categoriesAux[exp.categoryId]}
+              category={categories[exp.categoryId]}
               expense={exp}
             />
           ))}
