@@ -2,7 +2,8 @@ import React from "react";
 import { Category, Expense } from "../../common/types.ts";
 
 import { numberWithCommas } from "../../common/utils.ts";
-import { Box, boxClasses, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Budget } from "../../models/Budget.dto.ts";
 
 const levelColors = [
   {
@@ -27,12 +28,14 @@ type CategoryGridStatisticsType = {
   categories: { [key: string]: Category };
   expenses: Expense[];
   totalAmount: number;
+  budget: Budget;
 };
 
 function CategoryGridStatistics({
   categories,
   expenses,
   totalAmount,
+  budget,
 }: CategoryGridStatisticsType) {
   const expenseByCategory: object = expenses.reduce((acc, expense) => {
     const { categoryId } = expense;

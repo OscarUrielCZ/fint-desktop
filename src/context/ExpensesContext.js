@@ -22,6 +22,7 @@ function ExpensesProvider(props) {
   const [searchValue, setSearchValue] = useState("");
 
   const {
+    budget,
     categories,
     expenses,
     loading,
@@ -59,6 +60,7 @@ function ExpensesProvider(props) {
   return (
     <ExpensesContext.Provider
       value={{
+        budget,
         categories,
         expenses,
         expensesFound,

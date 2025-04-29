@@ -5,11 +5,13 @@ import { StorageStatus } from "../common/types.ts";
 import { Expense } from "../models/Expense.dto.ts";
 import FirebaseFintService from "../services/FirebaseFintService.ts";
 import { CategoriesMap } from "../models/Category.dto.ts";
+import { Budget } from "../models/Budget.dto.ts";
 
 function useStorage(storageName: string) {
     const [loading, setLoading] = useState<boolean>(true);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<CategoriesMap>({});
+    const [budget, setBudget] = useState<Budget|null>(null);
 
     const service = new FirebaseFintService();
 
@@ -29,6 +31,7 @@ function useStorage(storageName: string) {
             parsedData = {
                 expenses: [],
                 categories: {},
+                budget: null
             };
         } else {
             parsedData = JSON.parse(storage);
@@ -36,12 +39,14 @@ function useStorage(storageName: string) {
 
         setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) }))); // TODO: replace this date casting
         setCategories(parsedData.categories);
+        setBudget(parsedData.budget);
     };
 
-    const saveToLocalStorage = (expenses: Expense[], categories: CategoriesMap) => {
+    const saveToLocalStorage = (expenses: Expense[], categories: CategoriesMap, budget: Budget) => {
         const data = {
             expenses,
             categories,
+            budget
         };
 
         localStorage.setItem(storageName, JSON.stringify(data));
@@ -66,11 +71,13 @@ function useStorage(storageName: string) {
 
         const expenseList: Expense[] = await service.getExpenses();
         const categoriesData: CategoriesMap = await service.getCategories();
+        const budgetData: Budget = await service.getBudget();
 
         // update and save data
         setExpenses(expenseList);
         setCategories(categoriesData);
-        saveToLocalStorage(expenseList, categoriesData);
+        setBudget(budgetData);
+        saveToLocalStorage(expenseList, categoriesData, budgetData);
     }
 
     const deleteExpense = (id: string): void => {
@@ -88,14 +95,14 @@ function useStorage(storageName: string) {
         });
 
         setExpenses(updatedExpenses);
-        saveToLocalStorage(updatedExpenses, categories);
+        saveToLocalStorage(updatedExpenses, categories, budget as Budget);
     };
 
     const insertExpense = (expense: Expense): void => {
         expense.status = StorageStatus.NEW;
         const newExpenses: Expense[] = [ ...expenses, expense ];
         setExpenses(newExpenses);
-        saveToLocalStorage(newExpenses, categories);
+        saveToLocalStorage(newExpenses, categories, budget as Budget);
     };
 
     const updateExpense = (updatedExpense: Expense): void => {
@@ -108,10 +115,10 @@ function useStorage(storageName: string) {
             return expense;
         });
         setExpenses(updatedExpenses);
-        saveToLocalStorage(updatedExpenses, categories);
+        saveToLocalStorage(updatedExpenses, categories, budget as Budget);
     };
 
-    return { expenses, categories, loading,
+    return { expenses, categories, budget, loading,
         insertExpense, deleteExpense, updateExpense, syncData };
 }
 

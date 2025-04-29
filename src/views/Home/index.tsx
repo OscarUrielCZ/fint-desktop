@@ -30,7 +30,7 @@ function Home() {
 
   const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
-  const { categories, expensesFound, loading, openModal, syncData } =
+  const { budget, categories, expensesFound, loading, openModal, syncData } =
     useContext(ExpensesContext);
 
   const expensesFiltered = expensesFound
@@ -168,6 +168,7 @@ function Home() {
         categories={categories}
         expenses={expensesFiltered}
         totalAmount={expenseQuantity + investmentQuantity}
+        budget={budget}
       />
 
       <div style={{ marginBottom: "4rem" }}>
