@@ -16,7 +16,7 @@ import { ExpensesContext } from "../../context/ExpensesContext";
 import { Period } from "../../common/types.ts";
 
 import "./Home.css";
-import Statistics from "../../components/Statistics/index.tsx";
+import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
 import { Link } from "react-router-dom";
 import { Alert, Box, Button } from "@mui/material";
 
@@ -164,7 +164,7 @@ function Home() {
         )}
       </div>
 
-      <Statistics
+      <CategoryGridStatistics
         categories={categories}
         expenses={expensesFiltered}
         totalAmount={expenseQuantity + investmentQuantity}
