@@ -13,10 +13,12 @@ function useStorage(storageName: string) {
 
     const service = new FirebaseFintService();
 
+    
     useEffect(() => {
         setLoading(true);
         retriveFromLocalStorage();
         setLoading(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [storageName]);
 
     const retriveFromLocalStorage = () => {

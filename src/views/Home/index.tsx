@@ -19,6 +19,7 @@ import "./Home.css";
 import Statistics from "../../components/Statistics/index.tsx";
 import { Link } from "react-router-dom";
 import { Alert, Box, Button } from "@mui/material";
+
 function Home() {
   const currentDate = new Date();
 
@@ -27,7 +28,6 @@ function Home() {
     month: currentDate.getMonth(),
   });
 
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
   const { categories, expensesFound, loading, openModal, syncData } =
@@ -36,13 +36,12 @@ function Home() {
   const expensesFiltered = expensesFound
     .filter((expense) => {
       return (
-        (periodSelected === Period.FULL ||
-          (periodSelected === Period.MONTH &&
-            expense.date.getMonth() === dateComponents.month &&
-            expense.date.getFullYear() === dateComponents.year) ||
-          (periodSelected === Period.YEAR &&
-            expense.date.getFullYear() === dateComponents.year)) &&
-        (categoryFilter === "all" || categoryFilter === expense.category)
+        periodSelected === Period.FULL ||
+        (periodSelected === Period.MONTH &&
+          expense.date.getMonth() === dateComponents.month &&
+          expense.date.getFullYear() === dateComponents.year) ||
+        (periodSelected === Period.YEAR &&
+          expense.date.getFullYear() === dateComponents.year)
       );
     })
     .sort((a, b) => b.date - a.date);
@@ -163,21 +162,6 @@ function Home() {
             </select>
           </div>
         )}
-
-        {/* <div>
-          <span>Selecciona una categoría </span>
-          <select
-            name="category-filter"
-            onChange={(e) => setCategoryFilter(e.target.value)}
-          >
-            <option value="all">Todas</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div> */}
       </div>
 
       <Statistics

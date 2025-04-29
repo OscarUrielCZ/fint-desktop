@@ -6,11 +6,9 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 
-import * as Colors from "../../common/colors.ts";
-
 function ExpenseItem({ category, expense }) {
   const navigate = useNavigate();
-  const { deleteExpense, openUpdateExpenseModal } = useContext(ExpensesContext);
+  const { deleteExpense } = useContext(ExpensesContext);
   const {
     id,
     description,
