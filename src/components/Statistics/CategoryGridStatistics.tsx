@@ -47,11 +47,6 @@ function CategoryGridStatistics({
     return acc;
   }, {});
 
-  // order expenseByCategory descending
-  const orderedExpenseByCategory = Object.entries(expenseByCategory).sort(
-    (a, b) => b[1] - a[1]
-  );
-
   const budgetByCategory: object =
     budget?.items?.reduce((acc, item) => {
       const { categoryId, amount } = item;
@@ -74,31 +69,39 @@ function CategoryGridStatistics({
           m: 1,
         }}
       >
-        {orderedExpenseByCategory.map(([category, amount]) => (
-          <CategoryGridItem
-            key={category}
-            category={category}
-            amount={amount}
-            percentage={(amount * 100) / totalAmount}
-            reference={budgetByCategory[category] || 0}
-          />
-        ))}
+        {Object.entries(budgetByCategory).map(
+          ([categoryName, budgetAmount]) => (
+            <CategoryGridItem
+              key={categoryName}
+              categoryName={categoryName}
+              amount={expenseByCategory[categoryName] || 0}
+              percentage={
+                ((expenseByCategory[categoryName] || 0) * 100) / totalAmount
+              }
+              reference={budgetAmount}
+            />
+          )
+        )}
       </Box>
     </Box>
   );
 }
 
-function CategoryGridItem({ category, amount, percentage, reference }) {
-  const color = levelColors.find(
-    (color) => amount / reference <= color.threshold
-  )?.color;
+function CategoryGridItem({ categoryName, amount, percentage, reference }) {
+  const color =
+    reference !== 0
+      ? levelColors.find((color) => amount / reference <= color.threshold)
+          ?.color
+      : amount === 0
+      ? levelColors[0].color
+      : levelColors[levelColors.length - 1].color;
   return (
     <Box sx={{ p: 1, borderRadius: 1, backgroundColor: color }}>
-      <Typography variant="body1">
-        {category} ({percentage.toFixed(1)}%)
-      </Typography>
-      <Typography variant="subtitle2">${numberWithCommas(amount)}</Typography>{" "}
-      <Typography variant="caption">/${numberWithCommas(reference)}</Typography>
+      <Typography variant="body1">{categoryName}</Typography>
+      <Typography variant="subtitle2">
+        ${numberWithCommas(amount)} /${numberWithCommas(reference)}
+      </Typography>{" "}
+      <Typography variant="caption">({percentage.toFixed(1)}%)</Typography>
     </Box>
   );
 }
