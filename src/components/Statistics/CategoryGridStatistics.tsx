@@ -38,11 +38,12 @@ function CategoryGridStatistics({
   budget,
 }: CategoryGridStatisticsType) {
   const expenseByCategory: object = expenses.reduce((acc, expense) => {
-    const { categoryId } = expense;
+    const { categoryId, amount } = expense;
     const categoryName = categoryId
       ? categories[categoryId]?.displayValue
       : "Sin categoría";
-    acc[categoryName] = (acc[categoryName] || 0) + Number(expense.amount);
+
+    acc[categoryName] = (acc[categoryName] || 0) + Number(amount);
     return acc;
   }, {});
 
@@ -50,6 +51,15 @@ function CategoryGridStatistics({
   const orderedExpenseByCategory = Object.entries(expenseByCategory).sort(
     (a, b) => b[1] - a[1]
   );
+
+  const budgetByCategory: object =
+    budget?.items?.reduce((acc, item) => {
+      const { categoryId, amount } = item;
+      const categoryName =
+        categories[categoryId]?.displayValue || "Sin categoría";
+      acc[categoryName] = (acc[categoryName] || 0) + Number(amount);
+      return acc;
+    }, {}) || {};
 
   return (
     <Box sx={{ textAlign: "center" }}>
@@ -68,7 +78,7 @@ function CategoryGridStatistics({
             category={category}
             amount={amount}
             percentage={(amount * 100) / totalAmount}
-            reference={2000}
+            reference={budgetByCategory[category] || 0}
           />
         ))}
       </Box>
@@ -85,7 +95,8 @@ function CategoryGridItem({ category, amount, percentage, reference }) {
       <Typography variant="body1">
         {category} ({percentage.toFixed(1)}%)
       </Typography>
-      <Typography variant="subtitle2">${numberWithCommas(amount)}</Typography>
+      <Typography variant="subtitle2">${numberWithCommas(amount)}</Typography>{" "}
+      <Typography variant="caption">/${numberWithCommas(reference)}</Typography>
     </Box>
   );
 }
