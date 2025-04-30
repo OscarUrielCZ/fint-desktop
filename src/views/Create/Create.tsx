@@ -82,7 +82,7 @@ function Create({ updatingExpense }: { updatingExpense: unknown }) {
     }
 
     // TODO: factorizar rutas en un archivo general routes.js
-    navigate("/fint-desktop/");
+    navigate(-1);
   };
 
   const onSelectCategoryId = (id: string) => {

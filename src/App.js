@@ -9,8 +9,8 @@ import Home from "./views/Home/Home.tsx";
 import NotFound from "./views/NotFound/index.tsx";
 import Registry from "./views/Registry/index.tsx";
 import Login from "./views/Login/index.tsx";
-import Create from "./views/Create/index.tsx";
-import Update from "./views/Update/index.tsx";
+import Create from "./views/Create/Create.tsx";
+import Update from "./views/Update/Update.tsx";
 
 const router = createBrowserRouter([
   {

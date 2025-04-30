@@ -1,24 +1,22 @@
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+
+import { Alert, Box, Button, Typography } from "@mui/material";
 
 // import AddButton from "../../components/AddButton/";
-import AddExpenseForm from "../../components/AddExpenseForm/index.js";
-import Chip from "../../components/Chip/index.tsx";
-import ExpenseSearch from "../../components/ExpenseSearch/index.js";
-import ExpenseList from "../../components/ExpenseList/index.js";
+// import AddExpenseForm from "../../components/AddExpenseForm/index.js";
+// import Modal from "../../modals/Modal.js";
+import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
 import ExpenseItem from "../../components/ExpenseItem/ExpenseItem.tsx";
+import ExpenseList from "../../components/ExpenseList/index.js";
+import ExpenseSearch from "../../components/ExpenseSearch/index.js";
 import LoadingExpenses from "../../components/LoadingExpenses/index.js";
+import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
-import Modal from "../../modals/Modal.js";
-
+import colors from "../../common/colors.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
-
 import { Period } from "../../common/types.ts";
-
-import "./Home.css";
-import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
-import { Link } from "react-router-dom";
-import { Alert, Box, Button } from "@mui/material";
 
 function Home() {
   const currentDate = new Date();
@@ -27,7 +25,6 @@ function Home() {
     year: currentDate.getFullYear(),
     month: currentDate.getMonth(),
   });
-
   const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
 
   const { budget, categories, expensesFound, loading, openModal, syncData } =
@@ -46,9 +43,10 @@ function Home() {
     })
     .sort((a, b) => b.date - a.date);
 
-  const totalBudget = budget.items.reduce((acc, item) => {
-    return acc + Number(item.amount);
-  }, 0);
+  const totalBudget =
+    budget?.items?.reduce((acc, item) => {
+      return acc + Number(item.amount);
+    }, 0) || 0;
   let expenseQuantity: number = 0;
   let investmentQuantity: number = 0;
   let expensesCount: number = expensesFiltered.length;
@@ -66,144 +64,75 @@ function Home() {
   });
 
   return (
-    <div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+        backgroundColor: colors.background,
+      }}
+    >
       {noCatQuantity > 0 && (
         <Alert severity="warning">
           ATENCIÓN: {noCatQuantity} regs. sin categoría
         </Alert>
       )}
-      <div>
-        <button className="btn-update" onClick={syncData}>
-          Actualizar información
-        </button>
-      </div>
-      <div>
-        <ExpenseSearch />
-      </div>
-      <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-        <ResumeExpenses
-          totalBudget={totalBudget}
-          expenseQuantity={expenseQuantity}
-          investmentQuantity={investmentQuantity}
-          expensesCount={expensesCount}
-        />
-      </div>
-      <div>
-        <Chip
-          onClick={() => setPeriodSelected(Period.MONTH)}
-          style={{
-            backgroundColor:
-              periodSelected === Period.MONTH ? "#9EA1D4" : "#ddd",
-          }}
+      <Box>
+        <Button
+          variant="contained"
+          onClick={syncData}
+          sx={{ float: "right", mr: 2 }}
         >
-          Mes
-        </Chip>
-        <Chip
-          onClick={() => setPeriodSelected(Period.YEAR)}
-          style={{
-            backgroundColor:
-              periodSelected === Period.YEAR ? "#9EA1D4" : "#ddd",
-          }}
-        >
-          Año
-        </Chip>
-        <Chip
-          onClick={() => setPeriodSelected(Period.FULL)}
-          style={{
-            backgroundColor:
-              periodSelected === Period.FULL ? "#9EA1D4" : "#ddd",
-          }}
-        >
-          Todo
-        </Chip>
-      </div>
-
-      <div>
-        {periodSelected === Period.MONTH && (
-          <div>
-            <span>Selecciona un mes </span>
-            <select
-              value={dateComponents.month}
-              onChange={(e) =>
-                setDateComponents({
-                  ...dateComponents,
-                  month: Number(e.target.value),
-                })
-              }
-            >
-              <option value="0">Enero</option>
-              <option value="1">Febrero</option>
-              <option value="2">Marzo</option>
-              <option value="3">Abril</option>
-              <option value="4">Mayo</option>
-              <option value="5">Junio</option>
-              <option value="6">Julio</option>
-              <option value="7">Agosto</option>
-              <option value="8">Septiembre</option>
-              <option value="9">Octubre</option>
-              <option value="10">Noviembre</option>
-              <option value="11">Diciembre</option>
-            </select>
-          </div>
-        )}
-        {periodSelected !== Period.FULL && (
-          <div>
-            <span>Selecciona un año </span>
-            <select
-              value={dateComponents.year}
-              onChange={(e) =>
-                setDateComponents({
-                  ...dateComponents,
-                  year: Number(e.target.value),
-                })
-              }
-            >
-              <option value="2026">2026</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-            </select>
-          </div>
-        )}
-      </div>
-
+          Sincronizar datos
+        </Button>
+      </Box>
+      <PeriodFilters
+        setPeriodSelected={setPeriodSelected}
+        periodSelected={periodSelected}
+        dateComponents={dateComponents}
+        setDateComponents={setDateComponents}
+      />
+      <ExpenseSearch />
+      <ResumeExpenses
+        totalBudget={totalBudget}
+        expenseQuantity={expenseQuantity}
+        investmentQuantity={investmentQuantity}
+        expensesCount={expensesCount}
+      />
       <CategoryGridStatistics
         categories={categories}
         expenses={expensesFiltered}
         totalAmount={expenseQuantity + investmentQuantity}
         budget={budget}
       />
+      <ExpenseList>
+        <Typography align="center" variant="h6">
+          Mis egresos
+        </Typography>
 
-      <div style={{ marginBottom: "4rem" }}>
-        <ExpenseList>
-          <div style={{ fontWeight: "bold", textAlign: "center" }}>
-            Listado de egresos
-          </div>
+        {loading && <LoadingExpenses />}
 
-          {loading && <LoadingExpenses />}
-
-          {!loading && expensesCount === 0 && (
-            <p>Sin datos. Agrega uno nuevo</p>
-          )}
-
-          {expensesFiltered.map((exp) => (
-            <ExpenseItem
-              key={exp.id}
-              category={categories[exp.categoryId]}
-              expense={exp}
-            />
-          ))}
-        </ExpenseList>
-
-        {openModal && (
-          <Modal>
-            <AddExpenseForm />
-          </Modal>
+        {!loading && expensesCount === 0 && (
+          <Typography variant="body1" align="center">
+            Sin datos. Agrega uno nuevo
+          </Typography>
         )}
 
-        {/* <AddButton /> */}
-      </div>
+        {expensesFiltered.map((exp) => (
+          <ExpenseItem
+            key={exp.id}
+            category={categories[exp.categoryId]}
+            expense={exp}
+          />
+        ))}
+      </ExpenseList>
+
+      {/* {openModal && (
+        <Modal>
+          <AddExpenseForm />
+        </Modal>
+      )}
+      <AddButton /> */}
       <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
         <Button variant="contained" fullWidth>
           <Link to="create" style={{ color: "white", textDecoration: "none" }}>
@@ -211,7 +140,7 @@ function Home() {
           </Link>
         </Button>
       </Box>
-    </div>
+    </Box>
   );
 }
 

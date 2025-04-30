@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ExpensesContext } from "../../context/ExpensesContext";
-import Create from "../Create/index.tsx";
+import { ExpensesContext } from "../../context/ExpensesContext.js";
+import Create from "../Create/Create.tsx";
 import moment from "moment";
 
 function Update() {

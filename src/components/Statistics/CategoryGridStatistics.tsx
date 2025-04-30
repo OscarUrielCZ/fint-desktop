@@ -63,7 +63,9 @@ function CategoryGridStatistics({
 
   return (
     <Box sx={{ textAlign: "center" }}>
-      <Typography variant="h6">Categorías con mayores egresos</Typography>
+      <Typography variant="h6" align="center">
+        Mis categorías
+      </Typography>
       <Box
         sx={{
           display: "grid",
