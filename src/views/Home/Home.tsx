@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
 
 // import AddButton from "../../components/AddButton/";
-import AddExpenseForm from "../../components/AddExpenseForm/";
+import AddExpenseForm from "../../components/AddExpenseForm/index.js";
 import Chip from "../../components/Chip/index.tsx";
-import ExpenseSearch from "../../components/ExpenseSearch/";
-import ExpenseList from "../../components/ExpenseList/";
+import ExpenseSearch from "../../components/ExpenseSearch/index.js";
+import ExpenseList from "../../components/ExpenseList/index.js";
 import ExpenseItem from "../../components/ExpenseItem/ExpenseItem.tsx";
-import LoadingExpenses from "../../components/LoadingExpenses/";
+import LoadingExpenses from "../../components/LoadingExpenses/index.js";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
 import Modal from "../../modals/Modal.js";
 
-import { ExpensesContext } from "../../context/ExpensesContext";
+import { ExpensesContext } from "../../context/ExpensesContext.js";
 
 import { Period } from "../../common/types.ts";
 
@@ -46,6 +46,9 @@ function Home() {
     })
     .sort((a, b) => b.date - a.date);
 
+  const totalBudget = budget.items.reduce((acc, item) => {
+    return acc + Number(item.amount);
+  }, 0);
   let expenseQuantity: number = 0;
   let investmentQuantity: number = 0;
   let expensesCount: number = expensesFiltered.length;
@@ -79,6 +82,7 @@ function Home() {
       </div>
       <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
         <ResumeExpenses
+          totalBudget={totalBudget}
           expenseQuantity={expenseQuantity}
           investmentQuantity={investmentQuantity}
           expensesCount={expensesCount}
