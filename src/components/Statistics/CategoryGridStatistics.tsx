@@ -7,15 +7,15 @@ import { Budget } from "../../models/Budget.dto.ts";
 
 const levelColors = [
   {
-    threshold: 0.4,
+    threshold: 0.6,
     color: "#8CB369",
   },
   {
-    threshold: 0.6,
+    threshold: 0.8,
     color: "#F4E285",
   },
   {
-    threshold: 0.8,
+    threshold: 1,
     color: "#F4A259",
   },
   {
