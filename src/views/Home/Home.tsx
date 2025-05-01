@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import moment from "moment";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { Alert, Box, Button, Typography } from "@mui/material";
 
@@ -15,30 +16,35 @@ import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
 import colors from "../../common/colors.ts";
+import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
-import { Period } from "../../common/types.ts";
 
 function Home() {
-  const currentDate = new Date();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
 
-  const [dateComponents, setDateComponents] = useState({
-    year: currentDate.getFullYear(),
-    month: currentDate.getMonth(),
-  });
-  const [periodSelected, setPeriodSelected] = useState(Period.MONTH);
+  // redirext to path with search params
+  if (!start || !end) {
+    setSearchParams({
+      start: moment().startOf("month").format(DATE_PARAM_FORMAT),
+      end: moment().endOf("month").format(DATE_PARAM_FORMAT),
+    });
+  }
 
-  const { budget, categories, expensesFound, loading, openModal, syncData } =
+  const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
+
+  const [period, setPeriod] = useState<[string, string]>([
+    start as string,
+    end as string,
+  ]);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
       return (
-        periodSelected === Period.FULL ||
-        (periodSelected === Period.MONTH &&
-          expense.date.getMonth() === dateComponents.month &&
-          expense.date.getFullYear() === dateComponents.year) ||
-        (periodSelected === Period.YEAR &&
-          expense.date.getFullYear() === dateComponents.year)
+        expense.date.getTime() >= new Date(period[0]).getTime() &&
+        expense.date.getTime() <= new Date(period[1]).getTime()
       );
     })
     .sort((a, b) => b.date - a.date);
@@ -63,6 +69,17 @@ function Home() {
     }
   });
 
+  useEffect(
+    useCallback(() => {
+      console.log("period changed", period);
+      setSearchParams({
+        start: moment(period[0]).startOf("month").format(DATE_PARAM_FORMAT),
+        end: moment(period[1]).endOf("month").format(DATE_PARAM_FORMAT),
+      });
+    }, [period]),
+    [period]
+  );
+
   return (
     <Box
       sx={{
@@ -86,12 +103,7 @@ function Home() {
           Sincronizar datos
         </Button>
       </Box>
-      <PeriodFilters
-        setPeriodSelected={setPeriodSelected}
-        periodSelected={periodSelected}
-        dateComponents={dateComponents}
-        setDateComponents={setDateComponents}
-      />
+      <PeriodFilters period={period} setPeriod={setPeriod} />
       <ExpenseSearch />
       <ResumeExpenses
         totalBudget={totalBudget}

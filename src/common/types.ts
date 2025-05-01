@@ -5,9 +5,9 @@ export enum StorageStatus {
 }
 
 export enum Period {
-    MONTH,
-    YEAR,
-    FULL
+    MONTH = "month",
+    YEAR = "year",
+    FULL = "full"
 }
 
 // TODO: revisar tipos de Expense (de creacion, actualizacion, etc)

@@ -18,7 +18,6 @@ const defaultExpense = {
 const ExpensesContext = createContext();
 function ExpensesProvider(props) {
   const [formExpense, setFormExpense] = useState(defaultExpense);
-  const [openModal, setOpenModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const {
@@ -34,14 +33,6 @@ function ExpensesProvider(props) {
 
   const clearExpenseForm = () => {
     setFormExpense(defaultExpense);
-  };
-
-  const openUpdateExpenseModal = (expense) => {
-    let tempExpense = { ...expense };
-    tempExpense.date = moment(expense.date).format("YYYY-MM-DD");
-
-    setFormExpense(tempExpense);
-    setOpenModal(true);
   };
 
   let expensesFound =
@@ -66,14 +57,11 @@ function ExpensesProvider(props) {
         expensesFound,
         formExpense,
         loading,
-        openModal,
         searchValue,
 
         clearExpenseForm,
         deleteExpense,
         insertExpense,
-        openUpdateExpenseModal,
-        setOpenModal,
         setSearchValue,
         syncData,
         updateExpense,
