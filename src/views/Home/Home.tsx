@@ -21,29 +21,24 @@ import Settings from "../../components/Settings/Settings.tsx";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const start = searchParams.get("start");
-  const end = searchParams.get("end");
 
-  // redirext to path with search params
-  if (!start || !end) {
-    setSearchParams({
-      start: moment().startOf("month").format(DATE_PARAM_FORMAT),
-      end: moment().endOf("month").format(DATE_PARAM_FORMAT),
-    });
-  }
+  const startParam = searchParams.get("start");
+  const endParam = searchParams.get("end");
 
   const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
 
-  const [period, setPeriod] = useState<[string, string]>([
-    start as string,
-    end as string,
+  const [period, setPeriod] = useState<[string | null, string | null]>([
+    startParam,
+    endParam,
   ]);
-  const [openModal, setOpenModal] = useState<boolean>(true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
       return (
+        period[0] !== null &&
+        period[1] !== null &&
         expense.date.getTime() >= new Date(period[0]).getTime() &&
         expense.date.getTime() <= new Date(period[1]).getTime()
       );
@@ -70,11 +65,19 @@ function Home() {
     }
   });
 
+  // TODO: checar tantas recargas
   useEffect(
     useCallback(() => {
+      const periodFilter = [period[0], period[1]];
+      if (period[0] === null && period[1] === null) {
+        const now = moment();
+        periodFilter[0] = now.startOf("month").format(DATE_PARAM_FORMAT);
+        periodFilter[1] = now.endOf("month").format(DATE_PARAM_FORMAT);
+        setPeriod([periodFilter[0], periodFilter[1]]);
+      }
       setSearchParams({
-        start: moment(period[0]).startOf("month").format(DATE_PARAM_FORMAT),
-        end: moment(period[1]).endOf("month").format(DATE_PARAM_FORMAT),
+        start: periodFilter[0] as string,
+        end: periodFilter[1] as string,
       });
     }, [period]),
     [period]
@@ -104,7 +107,9 @@ function Home() {
           Configuración
         </Button>
       </Box>
-      <PeriodFilters period={period} setPeriod={setPeriod} />
+      {period[0] !== null && period[1] !== null && (
+        <PeriodFilters period={period} setPeriod={setPeriod} />
+      )}
       <ExpenseSearch />
       <ResumeExpenses
         totalBudget={totalBudget}
