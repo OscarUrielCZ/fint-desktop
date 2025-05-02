@@ -5,8 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Alert, Box, Button, Typography } from "@mui/material";
 
 // import AddButton from "../../components/AddButton/";
-// import AddExpenseForm from "../../components/AddExpenseForm/index.js";
-// import Modal from "../../modals/Modal.js";
+import Modal from "../../modals/Modal.js";
 import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
 import ExpenseItem from "../../components/ExpenseItem/ExpenseItem.tsx";
 import ExpenseList from "../../components/ExpenseList/index.js";
@@ -18,6 +17,7 @@ import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 import colors from "../../common/colors.ts";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
+import Settings from "../../components/Settings/Settings.tsx";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,6 +39,7 @@ function Home() {
     start as string,
     end as string,
   ]);
+  const [openModal, setOpenModal] = useState<boolean>(true);
 
   const expensesFiltered = expensesFound
     .filter((expense) => {
@@ -97,10 +98,10 @@ function Home() {
       <Box>
         <Button
           variant="contained"
-          onClick={syncData}
+          onClick={() => setOpenModal(true)}
           sx={{ float: "right", mr: 2 }}
         >
-          Sincronizar datos
+          Configuración
         </Button>
       </Box>
       <PeriodFilters period={period} setPeriod={setPeriod} />
@@ -139,12 +140,7 @@ function Home() {
         ))}
       </ExpenseList>
 
-      {/* {openModal && (
-        <Modal>
-          <AddExpenseForm />
-        </Modal>
-      )}
-      <AddButton /> */}
+      {/* <AddButton /> */}
       <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
         <Button variant="contained" fullWidth>
           <Link to="create" style={{ color: "white", textDecoration: "none" }}>
@@ -152,6 +148,12 @@ function Home() {
           </Link>
         </Button>
       </Box>
+
+      {openModal && (
+        <Modal>
+          <Settings onSync={syncData} onClose={() => setOpenModal(false)} />
+        </Modal>
+      )}
     </Box>
   );
 }
