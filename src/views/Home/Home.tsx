@@ -71,7 +71,6 @@ function Home() {
 
   useEffect(
     useCallback(() => {
-      console.log("period changed", period);
       setSearchParams({
         start: moment(period[0]).startOf("month").format(DATE_PARAM_FORMAT),
         end: moment(period[1]).endOf("month").format(DATE_PARAM_FORMAT),
@@ -87,6 +86,7 @@ function Home() {
         flexDirection: "column",
         gap: 1,
         backgroundColor: colors.background,
+        marginBottom: 6,
       }}
     >
       {noCatQuantity > 0 && (

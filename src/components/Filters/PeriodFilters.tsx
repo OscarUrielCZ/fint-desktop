@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
-import { Box } from "@mui/material";
+import { Box, MenuItem, Select, Typography } from "@mui/material";
 
 import Chip from "../Chip/index.tsx";
 
@@ -37,7 +37,7 @@ function PeriodFilters({ period, setPeriod }: any) {
 
   return (
     <Box>
-      <Box>
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
         <Chip
           onClick={() => setPeriodSelected(Period.MONTH)}
           style={{
@@ -67,44 +67,46 @@ function PeriodFilters({ period, setPeriod }: any) {
         </Chip>
       </Box>
 
-      <div>
+      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 3fr", mt: 2 }}>
         {periodSelected === Period.MONTH && (
-          <div>
-            <span>Selecciona un mes </span>
-            <select
+          <Fragment>
+            <Typography>Selecciona un mes </Typography>
+            <Select
+              label="Mes"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
             >
-              <option value="01">Enero</option>
-              <option value="02">Febrero</option>
-              <option value="03">Marzo</option>
-              <option value="04">Abril</option>
-              <option value="05">Mayo</option>
-              <option value="06">Junio</option>
-              <option value="07">Julio</option>
-              <option value="08">Agosto</option>
-              <option value="09">Septiembre</option>
-              <option value="10">Octubre</option>
-              <option value="11">Noviembre</option>
-              <option value="12">Diciembre</option>
-            </select>
-          </div>
+              <MenuItem value="01">Enero</MenuItem>
+              <MenuItem value="02">Febrero</MenuItem>
+              <MenuItem value="03">Marzo</MenuItem>
+              <MenuItem value="04">Abril</MenuItem>
+              <MenuItem value="05">Mayo</MenuItem>
+              <MenuItem value="06">Junio</MenuItem>
+              <MenuItem value="07">Julio</MenuItem>
+              <MenuItem value="08">Agosto</MenuItem>
+              <MenuItem value="09">Septiembre</MenuItem>
+              <MenuItem value="10">Octubre</MenuItem>
+              <MenuItem value="11">Noviembre</MenuItem>
+              <MenuItem value="12">Diciembre</MenuItem>
+            </Select>
+          </Fragment>
         )}
         {periodSelected !== Period.FULL && (
-          <div>
-            <span>Selecciona un año </span>
-            <select
+          <Fragment>
+            <Typography>Selecciona un año</Typography>
+            <Select
+              label="Año"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              <option value="2026">2026</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-            </select>
-          </div>
+              <MenuItem value="2026">2026</MenuItem>
+              <MenuItem value="2025">2025</MenuItem>
+              <MenuItem value="2024">2024</MenuItem>
+              <MenuItem value="2023">2023</MenuItem>
+            </Select>
+          </Fragment>
         )}
-      </div>
+      </Box>
     </Box>
   );
 }
