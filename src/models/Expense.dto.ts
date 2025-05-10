@@ -5,7 +5,7 @@ export type Expense = {
     amount: number,
     date: Date,
     description: string,
-    categoryId: string | null,
+    categoryId: string,
     subcategoryId: string | null,
     status?: StorageStatus
 }

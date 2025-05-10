@@ -7,9 +7,8 @@ import { Alert, Box, Button, Typography } from "@mui/material";
 // import AddButton from "../../components/AddButton/";
 import Modal from "../../modals/Modal.js";
 import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
-import ExpenseItem from "../../components/ExpenseItem/ExpenseItem.tsx";
-import ExpenseList from "../../components/ExpenseList/index.js";
-import ExpenseSearch from "../../components/ExpenseSearch/index.js";
+import ExpenseList from "../../components/ExpenseList/ExpenseList.tsx";
+import ExpenseSearch from "../../components/ExpenseSearch/ExpenseSearch.tsx";
 import LoadingExpenses from "../../components/LoadingExpenses/index.js";
 import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
@@ -88,8 +87,9 @@ function Home() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: 1,
+        gap: 2,
         backgroundColor: colors.background,
+        padding: 1,
         marginBottom: 6,
       }}
     >
@@ -102,7 +102,7 @@ function Home() {
         <Button
           variant="contained"
           onClick={() => setOpenModal(true)}
-          sx={{ float: "right", mr: 2 }}
+          sx={{ float: "right" }}
         >
           Configuración
         </Button>
@@ -123,28 +123,11 @@ function Home() {
         totalAmount={expenseQuantity + investmentQuantity}
         budget={budget}
       />
-      <ExpenseList>
-        <Typography align="center" variant="h6">
-          Mis egresos
-        </Typography>
-
-        {loading && <LoadingExpenses />}
-
-        {!loading && expensesCount === 0 && (
-          <Typography variant="body1" align="center">
-            Sin datos. Agrega uno nuevo
-          </Typography>
-        )}
-
-        {expensesFiltered.map((exp) => (
-          <ExpenseItem
-            key={exp.id}
-            category={categories[exp.categoryId]}
-            expense={exp}
-          />
-        ))}
-      </ExpenseList>
-
+      <ExpenseList
+        title="Mis egresos"
+        items={expensesFiltered}
+        categories={categories}
+      />
       {/* <AddButton /> */}
       <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
         <Button variant="contained" fullWidth>

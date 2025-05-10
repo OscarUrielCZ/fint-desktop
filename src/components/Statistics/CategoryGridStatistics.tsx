@@ -66,7 +66,7 @@ function CategoryGridStatistics({
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
           gap: 1,
-          m: 1,
+          mt: 1,
         }}
       >
         {Object.entries(budgetByCategory).map(

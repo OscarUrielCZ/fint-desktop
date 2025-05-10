@@ -5,18 +5,19 @@ import { ExpensesContext } from "../../context/ExpensesContext";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
+import { Expense } from "../../models/Expense.dto";
+import { Category } from "../../models/Category.dto";
 
-function ExpenseItem({ category, expense }) {
+function ExpenseListItem({
+  data,
+  category,
+}: {
+  data: Expense;
+  category: Category;
+}) {
   const navigate = useNavigate();
   const { deleteExpense } = useContext(ExpensesContext);
-  const {
-    id,
-    description,
-    date,
-    amount,
-    category: oldCategory,
-    subcategoryId,
-  } = expense;
+  const { id, description, date, amount, categoryId, subcategoryId } = data;
 
   const editExpense = (id) => {
     navigate(`/fint-desktop/update/${id}`);
@@ -31,11 +32,7 @@ function ExpenseItem({ category, expense }) {
       <div className="ExpenseItem">
         <div>
           <span className="name">{description}</span>
-          <CategoryPanel
-            category={category}
-            subcategoryId={subcategoryId}
-            oldCategory={oldCategory}
-          />
+          <CategoryPanel category={category} subcategoryId={subcategoryId} />
         </div>
         <div
           style={{
@@ -52,7 +49,7 @@ function ExpenseItem({ category, expense }) {
         <span className="delete" onClick={() => deleteExpense(id)}>
           Eliminar
         </span>
-        <span className="update" onClick={() => editExpense(expense.id)}>
+        <span className="update" onClick={() => editExpense(data.id)}>
           Modificar
         </span>
       </div>
@@ -60,22 +57,18 @@ function ExpenseItem({ category, expense }) {
   );
 }
 
-const CategoryPanel = ({ category, subcategoryId, oldCategory }) => {
-  const categoryName = category?.displayValue || "?";
+const CategoryPanel = ({ category, subcategoryId }) => {
+  const categoryName = category.displayValue;
   const subcategoryName =
-    category?.subcategories[subcategoryId]?.displayValue || "";
+    category.subcategories[subcategoryId]?.displayValue || "";
 
   return (
     <Box>
-      {!Boolean(category) ? (
-        <Typography color="red">Missing {oldCategory}</Typography>
-      ) : (
-        <Typography>
-          {categoryName} - {subcategoryName}
-        </Typography>
-      )}
+      <Typography>
+        {categoryName} - {subcategoryName}
+      </Typography>
     </Box>
   );
 };
 
-export default ExpenseItem;
+export default ExpenseListItem;
