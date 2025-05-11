@@ -84,18 +84,6 @@ function Home() {
     [period]
   );
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("user authenticated", user);
-      } else {
-        console.log("no user authenticated");
-      }
-    });
-
-    return unsubscribe();
-  }, []);
-
   return (
     <Box
       sx={{

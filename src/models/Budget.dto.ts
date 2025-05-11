@@ -6,6 +6,5 @@ type BudgetItem = {
 
 export type Budget = {
     readonly id: string,
-    readonly username: string,
     readonly items: BudgetItem[]
 };

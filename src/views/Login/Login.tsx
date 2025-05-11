@@ -19,7 +19,7 @@ function Login() {
     }
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         navigate("/fint-desktop/");
       })
       .catch(() => {

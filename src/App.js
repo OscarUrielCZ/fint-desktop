@@ -3,6 +3,8 @@ import { ExpensesProvider } from "./context/ExpensesContext";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext";
+
 import Root from "./routes/Root.tsx";
 
 import Home from "./views/Home/Home.tsx";
@@ -11,6 +13,7 @@ import Registry from "./views/Registry/index.tsx";
 import Login from "./views/Login/Login.tsx";
 import Create from "./views/Create/Create.tsx";
 import Update from "./views/Update/Update.tsx";
+import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "fint-desktop/",
-        element: <Home />,
+        element: <ProtectedRoute element={Home} />,
       },
       {
         path: "fint-desktop/login",
@@ -28,15 +31,15 @@ const router = createBrowserRouter([
       },
       {
         path: "fint-desktop/create",
-        element: <Create />,
+        element: <ProtectedRoute element={Create} />,
       },
       {
         path: "fint-desktop/update/:id",
-        element: <Update />,
+        element: <ProtectedRoute element={Update} />,
       },
       {
         path: "fint-desktop/registro",
-        element: <Registry />,
+        element: <ProtectedRoute element={Registry} />,
       },
     ],
   },
@@ -44,9 +47,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <ExpensesProvider>
-      <RouterProvider router={router} />
-    </ExpensesProvider>
+    <AuthProvider>
+      <ExpensesProvider>
+        <RouterProvider router={router} />
+      </ExpensesProvider>
+    </AuthProvider>
   );
 }
 

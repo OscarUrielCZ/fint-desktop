@@ -5,10 +5,10 @@ import { Budget } from '../../models/Budget.dto';
 
 const COLLECTION_NAME = "budgets";
 
-export async function findByUsername(username: string): Promise<Budget> {
-    // make a firebase search to find budget by username field
+export async function findByUserId(userId: string): Promise<Budget> {
+    // make a firebase search to find budget by userId field
     const collectionRef = collection(db, COLLECTION_NAME);
-    const budgetQuery = query(collectionRef, where("username", "==", username));
+    const budgetQuery = query(collectionRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(budgetQuery);
 
     let budget: Budget | null = null;
@@ -16,7 +16,6 @@ export async function findByUsername(username: string): Promise<Budget> {
     querySnapshot.forEach((doc) => {
         budget = {
             id: doc.id,
-            username: doc.get("username"),
             items: doc.get("items")
         };
     });

@@ -5,7 +5,7 @@ import IFintService from "./IFintService";
 
 import { findAll as findExpenses, remove, save, update } from "../api/firebase/Expense.ts";
 import { findAll as findCategories } from "../api/firebase/Category.ts";
-import { findByUsername as FindBudgetByUsername } from "../api/firebase/Budget.ts";
+import { findByUserId as findBudgetByUserId } from "../api/firebase/Budget.ts";
 import { createCategoryJson } from "../common/utils.ts";
 
 class FirebaseFintService implements IFintService {
@@ -16,7 +16,7 @@ class FirebaseFintService implements IFintService {
         return createCategoryJson(await findCategories());
     }
     getBudget(): Promise<Budget> {
-        return FindBudgetByUsername("osqur");
+        return findBudgetByUserId("osqur");
     }
 
     removeExpense(id: string) {
