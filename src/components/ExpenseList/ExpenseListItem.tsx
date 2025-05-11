@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
-import "./ExpenseItem.css";
+
+import moment from "moment";
+import { Box, Chip, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { ExpensesContext } from "../../context/ExpensesContext";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
 import { Expense } from "../../models/Expense.dto";
 import { Category } from "../../models/Category.dto";
+
+import "./ExpenseItem.css";
 
 function ExpenseListItem({
   data,
@@ -17,7 +21,7 @@ function ExpenseListItem({
 }) {
   const navigate = useNavigate();
   const { deleteExpense } = useContext(ExpensesContext);
-  const { id, description, date, amount, categoryId, subcategoryId } = data;
+  const { id, description, date, amount, subcategoryId } = data;
 
   const editExpense = (id) => {
     navigate(`/fint-desktop/update/${id}`);
@@ -27,48 +31,48 @@ function ExpenseListItem({
     return moment(date).format("DD/MM/YYYY");
   };
 
-  return (
-    <div style={{ borderRadius: "1rem" }}>
-      <div className="ExpenseItem">
-        <div>
-          <span className="name">{description}</span>
-          <CategoryPanel category={category} subcategoryId={subcategoryId} />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: 5,
-          }}
-        >
-          <span className="category">{getFormattedDate(date)}</span>
-          <span>${amount}</span>
-        </div>
-      </div>
-      <div className="actions">
-        <span className="delete" onClick={() => deleteExpense(id)}>
-          Eliminar
-        </span>
-        <span className="update" onClick={() => editExpense(data.id)}>
-          Modificar
-        </span>
-      </div>
-    </div>
-  );
-}
-
-const CategoryPanel = ({ category, subcategoryId }) => {
-  const categoryName = category.displayValue;
   const subcategoryName =
-    category.subcategories[subcategoryId]?.displayValue || "";
+    category.subcategories && subcategoryId
+      ? category.subcategories[subcategoryId]?.displayValue
+      : null;
 
   return (
-    <Box>
-      <Typography>
-        {categoryName} - {subcategoryName}
-      </Typography>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "1fr 3fr 1fr",
+        p: 1,
+      }}
+    >
+      <Box
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="subtitle2" color="grey">
+          {getFormattedDate(date)}
+        </Typography>
+        <Typography variant="h6">${amount}</Typography>
+      </Box>
+      <Box sx={{ textAlign: "left", px: 2 }}>
+        <Typography>{description}</Typography>
+        <Chip label={category.displayValue} />
+        {subcategoryName && <Chip label={subcategoryName} sx={{ ml: 1 }} />}
+      </Box>
+      <Box sx={{ textAlign: "center" }}>
+        <DeleteIcon
+          color="error"
+          sx={{ cursor: "pointer", fontSize: "1.8rem" }}
+          onClick={() => deleteExpense(id)}
+        />
+        <EditIcon
+          color="warning"
+          sx={{ cursor: "pointer", fontSize: "1.8rem", ml: 3 }}
+          onClick={() => editExpense(data.id)}
+        />
+      </Box>
     </Box>
   );
-};
+}
 
 export default ExpenseListItem;

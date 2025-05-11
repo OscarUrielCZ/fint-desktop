@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 
-import { Box, List, Typography } from "@mui/material";
+import { Box, Divider, List, Typography } from "@mui/material";
 
 import ExpenseListItem from "./ExpenseListItem.tsx";
 
@@ -21,11 +21,13 @@ function ExpenseList({ categories, items, title }: ExpenseListType) {
       </Typography>
       <List>
         {items.map((item) => (
-          <ExpenseListItem
-            key={item.id}
-            data={item}
-            category={categories[item.categoryId]}
-          />
+          <Fragment key={item.id}>
+            <ExpenseListItem
+              data={item}
+              category={categories[item.categoryId]}
+            />
+            <Divider variant="middle" />
+          </Fragment>
         ))}
       </List>
     </Box>

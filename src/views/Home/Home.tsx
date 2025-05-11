@@ -2,14 +2,14 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { Alert, Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button } from "@mui/material";
 
 // import AddButton from "../../components/AddButton/";
 import Modal from "../../modals/Modal.js";
 import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
 import ExpenseList from "../../components/ExpenseList/ExpenseList.tsx";
 import ExpenseSearch from "../../components/ExpenseSearch/ExpenseSearch.tsx";
-import LoadingExpenses from "../../components/LoadingExpenses/index.js";
+// import LoadingExpenses from "../../components/LoadingExpenses/index.js";
 import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
