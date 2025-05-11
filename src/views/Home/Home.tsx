@@ -17,6 +17,8 @@ import colors from "../../common/colors.ts";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
 import Settings from "../../components/Settings/Settings.tsx";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase.js";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,6 +83,18 @@ function Home() {
     }, [period]),
     [period]
   );
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("user authenticated", user);
+      } else {
+        console.log("no user authenticated");
+      }
+    });
+
+    return unsubscribe();
+  }, []);
 
   return (
     <Box
