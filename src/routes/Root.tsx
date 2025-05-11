@@ -1,20 +1,26 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+
+import { signOut } from "firebase/auth";
+import { AppBar, Box, Button, Typography } from "@mui/material";
+import { auth } from "../firebase";
 
 function Root() {
+  const logout = () => {
+    signOut(auth);
+  };
+
   return (
     <>
-      <nav>
-        <ul style={{ listStyle: "none" }}>
-          <li>App versión: 0.2.3</li>
-          <li>
-            <Link to="fint-desktop/login">Cerrar sesión</Link>
-          </li>
-        </ul>
-      </nav>
-      <div>
+      <AppBar position="static">
+        <Typography>App versión: 0.2.3</Typography>
+        <Button variant="contained" color="info" onClick={logout}>
+          Cerrar sesión
+        </Button>
+      </AppBar>
+      <Box sx={{ mt: 4 }}>
         <Outlet />
-      </div>
+      </Box>
     </>
   );
 }
