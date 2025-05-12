@@ -9,7 +9,7 @@ const ProtectedRoute = ({ element: Element, ...rest }) => {
   const { user, loading }: any = useAuth();
 
   if (loading) {
-    return <Typography>Loading...</Typography>; // Or a spinner
+    return <Typography>Loading...</Typography>; // TODO: Create loading component (spinner)
   }
 
   if (!user) {

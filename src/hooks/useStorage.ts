@@ -6,15 +6,21 @@ import { Expense } from "../models/Expense.dto.ts";
 import FirebaseFintService from "../services/FirebaseFintService.ts";
 import { CategoriesMap } from "../models/Category.dto.ts";
 import { Budget } from "../models/Budget.dto.ts";
+import { useAuth } from "./useAuth.ts";
+
+let service: FirebaseFintService;
 
 function useStorage(storageName: string) {
     const [loading, setLoading] = useState<boolean>(true);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [categories, setCategories] = useState<CategoriesMap>({});
     const [budget, setBudget] = useState<Budget|null>(null);
+    
+    const { user } = useAuth() as any;
 
-    const service = new FirebaseFintService();
-
+    if (user != null) {
+        service = new FirebaseFintService(user.uid);
+    }
     
     useEffect(() => {
         setLoading(true);
@@ -71,13 +77,19 @@ function useStorage(storageName: string) {
 
         const expenseList: Expense[] = await service.getExpenses();
         const categoriesData: CategoriesMap = await service.getCategories();
-        const budgetData: Budget = await service.getBudget();
+        // TODO: handle new budgets
+        const budgetData: Budget | null = await service.getBudget().catch(() => null);
+        let finalBudget = budgetData;
+
+        if (budgetData == null) {
+            finalBudget = service.buildBudget(categoriesData);
+        }
 
         // update and save data
         setExpenses(expenseList);
         setCategories(categoriesData);
-        setBudget(budgetData);
-        saveToLocalStorage(expenseList, categoriesData, budgetData);
+        setBudget(finalBudget);
+        saveToLocalStorage(expenseList, categoriesData, finalBudget as Budget);
     }
 
     const deleteExpense = (id: string): void => {

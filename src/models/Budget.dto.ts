@@ -1,4 +1,4 @@
-type BudgetItem = {
+export type BudgetItem = {
     readonly amount: number,
     readonly categoryId: string,
     readonly subcategoryId: string | null

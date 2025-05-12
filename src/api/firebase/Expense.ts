@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from "../../firebase";
 
 import { Expense, NewExpense } from "../../models/Expense.dto";
@@ -6,8 +6,9 @@ import { castFirebaseDate } from '../../utils.ts';
 
 const COLLECTION_NAME = "expenses";
 
-export async function findAll(): Promise<Expense[]> {
-    const expensesSnaps = await getDocs(collection(db, COLLECTION_NAME));
+export async function findAll(userId: string): Promise<Expense[]> {
+    const expensesQuery = await query(collection(db, COLLECTION_NAME), where("userId", "==", userId));
+    const expensesSnaps = await getDocs(expensesQuery);
     const expensesList: Expense[] = await Promise.all(expensesSnaps.docs.map(doc => {
         const id = doc.id;
         const data = doc.data();
