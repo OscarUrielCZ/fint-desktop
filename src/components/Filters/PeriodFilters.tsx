@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 import { Box, MenuItem, Select, Typography } from "@mui/material";
@@ -8,59 +8,56 @@ import Chip from "../Chip/index.tsx";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { Period } from "../../common/types.ts";
 
-function PeriodFilters({ period, setPeriod }: any) {
+// TODO: cambiar tipo de period de string a date, tener cuidado con el formato en Home.tsx
+function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
   const now = moment(period[0]);
 
   const [selectedYear, setSelectedYear] = useState<string>(now.format("YYYY"));
   const [selectedMonth, setSelectedMonth] = useState<string>(now.format("MM"));
-  const [periodSelected, setPeriodSelected] = useState<Period>(Period.MONTH);
 
   useEffect(
     useCallback(() => {
-      if (periodSelected === Period.MONTH || periodSelected === Period.YEAR) {
+      if (periodType === Period.MONTH || periodType === Period.YEAR) {
         const dateRef = `${selectedYear}-${selectedMonth}-01`;
         const d = moment(dateRef);
 
-        const start = d.startOf(periodSelected).format(DATE_PARAM_FORMAT);
-        const end = d.endOf(periodSelected).format(DATE_PARAM_FORMAT);
+        const start = d.startOf(periodType).format(DATE_PARAM_FORMAT);
+        const end = d.endOf(periodType).format(DATE_PARAM_FORMAT);
 
         setPeriod([start, end]);
-      } else if (periodSelected === Period.FULL) {
+      } else if (periodType === Period.FULL) {
         setPeriod([
           moment("2023-01-01").format(DATE_PARAM_FORMAT),
           moment().format(DATE_PARAM_FORMAT),
         ]);
       }
-    }, [selectedYear, selectedMonth, periodSelected]),
-    [selectedYear, selectedMonth, periodSelected]
+    }, [selectedYear, selectedMonth, periodType]),
+    [selectedYear, selectedMonth, periodType]
   );
 
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
         <Chip
-          onClick={() => setPeriodSelected(Period.MONTH)}
+          onClick={() => setPeriodType(Period.MONTH)}
           style={{
-            backgroundColor:
-              periodSelected === Period.MONTH ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.MONTH ? "#9EA1D4" : "#ddd",
           }}
         >
           Mes
         </Chip>
         <Chip
-          onClick={() => setPeriodSelected(Period.YEAR)}
+          onClick={() => setPeriodType(Period.YEAR)}
           style={{
-            backgroundColor:
-              periodSelected === Period.YEAR ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.YEAR ? "#9EA1D4" : "#ddd",
           }}
         >
           Año
         </Chip>
         <Chip
-          onClick={() => setPeriodSelected(Period.FULL)}
+          onClick={() => setPeriodType(Period.FULL)}
           style={{
-            backgroundColor:
-              periodSelected === Period.FULL ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.FULL ? "#9EA1D4" : "#ddd",
           }}
         >
           Todo
@@ -68,7 +65,7 @@ function PeriodFilters({ period, setPeriod }: any) {
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 3fr", mt: 2 }}>
-        {periodSelected === Period.MONTH && (
+        {periodType === Period.MONTH && (
           <Fragment>
             <Typography>Selecciona un mes </Typography>
             <Select
@@ -91,7 +88,7 @@ function PeriodFilters({ period, setPeriod }: any) {
             </Select>
           </Fragment>
         )}
-        {periodSelected !== Period.FULL && (
+        {periodType !== Period.FULL && (
           <Fragment>
             <Typography>Selecciona un año</Typography>
             <Select

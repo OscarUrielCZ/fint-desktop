@@ -17,6 +17,7 @@ import colors from "../../common/colors.ts";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
 import Settings from "../../components/Settings/Settings.tsx";
+import { Period } from "../../common/types.ts";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,9 @@ function Home() {
   const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
 
+  const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
+    Period.MONTH
+  );
   const [period, setPeriod] = useState<[string | null, string | null]>([
     startParam,
     endParam,
@@ -92,7 +96,12 @@ function Home() {
         </Button>
       </Box>
       {period[0] !== null && period[1] !== null && (
-        <PeriodFilters period={period} setPeriod={setPeriod} />
+        <PeriodFilters
+          period={period}
+          setPeriod={setPeriod}
+          periodType={defaultPeriodType}
+          setPeriodType={setDefaultPeriodType}
+        />
       )}
       <ExpenseSearch />
       <ResumeExpenses
