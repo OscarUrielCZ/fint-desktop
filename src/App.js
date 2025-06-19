@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 import Root from "./routes/Root.tsx";
 
+import Category from "./views/Category/Category.tsx";
 import Home from "./views/Home/Home.tsx";
 import NotFound from "./views/NotFound/index.tsx";
 import Registry from "./views/Registry/index.tsx";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "fint-desktop/registro",
         element: <ProtectedRoute element={Registry} />,
+      },
+      {
+        path: "fint-desktop/category/:id",
+        element: <ProtectedRoute element={Category} />,
       },
     ],
   },

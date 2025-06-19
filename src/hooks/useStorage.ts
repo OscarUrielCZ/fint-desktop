@@ -43,7 +43,7 @@ function useStorage(storageName: string) {
             parsedData = JSON.parse(storage);
         }
 
-        setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) }))); // TODO: replace this date casting
+        setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) })).sort((a, b) => b.date - a.date)); // TODO: replace this date casting
         setCategories(parsedData.categories);
         setBudget(parsedData.budget);
     };

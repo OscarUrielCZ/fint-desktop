@@ -1,1 +1,29 @@
 export const DATE_PARAM_FORMAT = "YYYY-MM-DD";
+
+/**
+ * 
+ * @param percentage a value from 0 to 1
+ */
+export const getLevelColor = (percentage) => {
+    const levelColors = [
+        {
+            threshold: 0.6,
+            color: "#8CB369",
+        },
+        {
+            threshold: 0.8,
+            color: "#F4E285",
+        },
+        {
+            threshold: 1,
+            color: "#F4A259",
+        },
+        {
+            threshold: Infinity,
+            color: "#C94F55",
+        },
+    ];
+
+    return levelColors.find((color) => percentage <= color.threshold)?.color;    
+};
+

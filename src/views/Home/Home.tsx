@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -17,8 +17,6 @@ import colors from "../../common/colors.ts";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
 import Settings from "../../components/Settings/Settings.tsx";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebase.js";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,35 +33,24 @@ function Home() {
   ]);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const expensesFiltered = expensesFound
-    .filter((expense) => {
-      return (
-        period[0] !== null &&
-        period[1] !== null &&
-        expense.date.getTime() >= new Date(period[0]).getTime() &&
-        expense.date.getTime() <= new Date(period[1]).getTime()
-      );
-    })
-    .sort((a, b) => b.date - a.date);
+  const expensesFiltered = expensesFound.filter((expense) => {
+    return (
+      period[0] !== null &&
+      period[1] !== null &&
+      expense.date.getTime() >= new Date(period[0]).getTime() &&
+      expense.date.getTime() <= new Date(period[1]).getTime()
+    );
+  });
 
   const totalBudget =
     budget?.items?.reduce((acc, item) => {
       return acc + Number(item.amount);
     }, 0) || 0;
   let expenseQuantity: number = 0;
-  let investmentQuantity: number = 0;
   let expensesCount: number = expensesFiltered.length;
-  let noCatQuantity: number = 0;
 
   expensesFiltered.forEach((expense) => {
-    if (!expense.categoryId) {
-      noCatQuantity += 1;
-    } else {
-      if (expense.categoryId === "DxsSPujNFFhSJt1C0Qe2")
-        // inversión
-        investmentQuantity += Number(expense.amount);
-      else expenseQuantity += Number(expense.amount);
-    }
+    expenseQuantity += Number(expense.amount);
   });
 
   // TODO: checar tantas recargas
@@ -95,11 +82,6 @@ function Home() {
         marginBottom: 6,
       }}
     >
-      {noCatQuantity > 0 && (
-        <Alert severity="warning">
-          ATENCIÓN: {noCatQuantity} regs. sin categoría
-        </Alert>
-      )}
       <Box>
         <Button
           variant="contained"
@@ -116,13 +98,12 @@ function Home() {
       <ResumeExpenses
         totalBudget={totalBudget}
         expenseQuantity={expenseQuantity}
-        investmentQuantity={investmentQuantity}
         expensesCount={expensesCount}
       />
       <CategoryGridStatistics
         categories={categories}
         expenses={expensesFiltered}
-        totalAmount={expenseQuantity + investmentQuantity}
+        totalAmount={expenseQuantity}
         budget={budget}
       />
       <ExpenseList

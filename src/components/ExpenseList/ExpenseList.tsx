@@ -13,6 +13,7 @@ type ExpenseListType = {
   title: string;
 };
 
+// TODO: remove categories param, get it from context
 function ExpenseList({ categories, items, title }: ExpenseListType) {
   return (
     <Box>

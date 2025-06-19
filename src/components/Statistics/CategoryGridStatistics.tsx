@@ -1,28 +1,12 @@
-import React from "react";
-import { Category, Expense } from "../../common/types.ts";
+import { Link } from "react-router-dom";
 
-import { numberWithCommas } from "../../common/utils.ts";
 import { Box, Typography } from "@mui/material";
-import { Budget } from "../../models/Budget.dto.ts";
 
-const levelColors = [
-  {
-    threshold: 0.6,
-    color: "#8CB369",
-  },
-  {
-    threshold: 0.8,
-    color: "#F4E285",
-  },
-  {
-    threshold: 1,
-    color: "#F4A259",
-  },
-  {
-    threshold: Infinity,
-    color: "#C94F55",
-  },
-];
+import { Budget } from "../../models/Budget.dto.ts";
+import { Category } from "../../models/Category.dto.ts";
+import { Expense } from "../../models/Expense.dto.ts";
+import { getLevelColor } from "../../common/constants.ts";
+import { numberWithCommas } from "../../common/utils.ts";
 
 type CategoryGridStatisticsType = {
   categories: { [key: string]: Category };
@@ -39,20 +23,14 @@ function CategoryGridStatistics({
 }: CategoryGridStatisticsType) {
   const expenseByCategory: object = expenses.reduce((acc, expense) => {
     const { categoryId, amount } = expense;
-    const categoryName = categoryId
-      ? categories[categoryId]?.displayValue
-      : "Sin categoría";
-
-    acc[categoryName] = (acc[categoryName] || 0) + Number(amount);
+    acc[categoryId] = (acc[categoryId] || 0) + Number(amount);
     return acc;
   }, {});
 
   const budgetByCategory: object =
     budget?.items?.reduce((acc, item) => {
       const { categoryId, amount } = item;
-      const categoryName =
-        categories[categoryId]?.displayValue || "Sin categoría";
-      acc[categoryName] = (acc[categoryName] || 0) + Number(amount);
+      acc[categoryId] = (acc[categoryId] || 0) + Number(amount);
       return acc;
     }, {}) || {};
 
@@ -69,40 +47,55 @@ function CategoryGridStatistics({
           mt: 1,
         }}
       >
-        {Object.entries(budgetByCategory).map(
-          ([categoryName, budgetAmount]) => (
-            <CategoryGridItem
-              key={categoryName}
-              categoryName={categoryName}
-              amount={expenseByCategory[categoryName] || 0}
-              percentage={
-                ((expenseByCategory[categoryName] || 0) * 100) / totalAmount
-              }
-              reference={budgetAmount}
-            />
-          )
-        )}
+        {Object.entries(budgetByCategory).map(([categoryId, budgetAmount]) => (
+          <CategoryGridItem
+            key={categoryId}
+            categoryId={categoryId}
+            categoryName={
+              categories[categoryId].displayValue || "Sin categoría"
+            }
+            amount={expenseByCategory[categoryId] || 0}
+            percentage={
+              ((expenseByCategory[categoryId] || 0) * 100) / totalAmount
+            }
+            reference={budgetAmount}
+          />
+        ))}
       </Box>
     </Box>
   );
 }
 
-function CategoryGridItem({ categoryName, amount, percentage, reference }) {
-  const color =
-    reference !== 0
-      ? levelColors.find((color) => amount / reference <= color.threshold)
-          ?.color
-      : amount === 0
-      ? levelColors[0].color
-      : levelColors[levelColors.length - 1].color;
+function CategoryGridItem({
+  categoryId,
+  categoryName,
+  amount,
+  percentage,
+  reference,
+}) {
+  const budgetPercentage =
+    reference !== 0 ? amount / reference : amount === 0 ? 0 : 1;
+  const color = getLevelColor(budgetPercentage);
   return (
-    <Box sx={{ p: 1, borderRadius: 1, backgroundColor: color }}>
-      <Typography variant="body1">{categoryName}</Typography>
-      <Typography variant="subtitle2">
-        ${numberWithCommas(amount)} /${numberWithCommas(reference)}
-      </Typography>{" "}
-      <Typography variant="caption">({percentage.toFixed(1)}%)</Typography>
-    </Box>
+    <Link
+      to={`/fint-desktop/category/${categoryId}`}
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
+      <Box
+        sx={{
+          p: 1,
+          borderRadius: 1,
+          backgroundColor: color,
+          cursor: "pointer",
+        }}
+      >
+        <Typography variant="body1">{categoryName}</Typography>
+        <Typography variant="subtitle2">
+          ${numberWithCommas(amount)} /${numberWithCommas(reference)}
+        </Typography>{" "}
+        <Typography variant="caption">({percentage.toFixed(1)}%)</Typography>
+      </Box>
+    </Link>
   );
 }
 
