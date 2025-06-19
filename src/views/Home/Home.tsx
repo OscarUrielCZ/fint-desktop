@@ -28,6 +28,7 @@ function Home() {
   const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
 
+  // TODO: ajustar budget con el periodo seleccionado
   const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
     Period.MONTH
   );
@@ -57,7 +58,7 @@ function Home() {
     expenseQuantity += Number(expense.amount);
   });
 
-  // TODO: checar tantas recargas
+  // TODO: checar tantas recargas. CONSIDERAR borrar esta parte de busqueda por query, considerar cookies o localstorage
   useEffect(
     useCallback(() => {
       const periodFilter = [period[0], period[1]];
@@ -103,6 +104,7 @@ function Home() {
           setPeriodType={setDefaultPeriodType}
         />
       )}
+      {/* TODO: quitar barra de busqueda y eliminar su valor del context */}
       <ExpenseSearch />
       <ResumeExpenses
         totalBudget={totalBudget}
@@ -115,6 +117,7 @@ function Home() {
         totalAmount={expenseQuantity}
         budget={budget}
       />
+      {/* TODO: quitar registros del home y dejar solo los 3 últimos */}
       <ExpenseList
         title="Mis egresos"
         items={expensesFiltered}

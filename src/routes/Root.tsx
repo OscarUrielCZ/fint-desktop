@@ -13,7 +13,7 @@ function Root() {
   return (
     <>
       <AppBar position="static">
-        <Typography>App versión: 0.2.3</Typography>
+        <Typography>App versión: 0.2.4</Typography>
         <Button variant="contained" color="info" onClick={logout}>
           Cerrar sesión
         </Button>

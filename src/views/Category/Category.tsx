@@ -24,11 +24,11 @@ function Category() {
     today.endOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
   ]);
 
-  // TODO: mostar budget basado en el periodo de tiempo
-
   // TODO: gráfica de barras agnóstica al periodo seleccionado que muestre el gasto por mes
 
-  // TODO: mostrar subcategorias
+  // TODO: mostrar subcategorias. CONSIDEARA el mismo componente Grid, tener cuidado con recursividad, tal vez desabilitar links para las subcategorías
+
+  //   TODO: agregar barra de búsqueda
 
   const categoryExpenses = expensesFound.filter(
     (expense) =>
@@ -40,9 +40,16 @@ function Category() {
     (acc, expense) => acc + Number(expense.amount),
     0
   );
-  const categoryBudget = budget.items.find(
-    (item) => item.categoryId === id
-  ).amount;
+
+  // this is because budget is monthly based
+  const numberOfMonths = {
+    [Period.MONTH]: 1,
+    [Period.YEAR]: 12,
+    [Period.FULL]: today.month() + 1 + (today.year() - 2024) * 12, // num of months in current year + num oof months since 2024
+  };
+  const categoryBudget =
+    budget.items.find((item) => item.categoryId === id).amount *
+    numberOfMonths[defaultPeriodType];
 
   const categoryName = categories[id as string].displayValue;
 
