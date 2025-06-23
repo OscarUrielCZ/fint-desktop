@@ -19,6 +19,8 @@ import { ExpensesContext } from "../../context/ExpensesContext.js";
 import Settings from "../../components/Settings/Settings.tsx";
 import { Period } from "../../common/types.ts";
 
+// TODO: eliminar parametros del URL, se compartirán mediante el context
+// TODO: hacer un budget mensual, este se va a generar uno nuevo cada mes con los valores del mes anterior y el usuario tendrá que confirmarlo, este budget se usará para hacer gráficas de barras y de puntos (combinada, puntos el budget esperado y barras el gasto real)
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
 

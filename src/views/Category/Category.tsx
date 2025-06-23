@@ -48,7 +48,9 @@ function Category() {
     [Period.FULL]: today.month() + 1 + (today.year() - 2024) * 12, // num of months in current year + num oof months since 2024
   };
   const categoryBudget =
-    budget.items.find((item) => item.categoryId === id).amount *
+    budget.items
+      .filter((item) => item.categoryId === id) // all subcategories in the category
+      .reduce((acc, item) => acc + Number(item.amount), 0) *
     numberOfMonths[defaultPeriodType];
 
   const categoryName = categories[id as string].displayValue;
