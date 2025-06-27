@@ -1,6 +1,4 @@
-import React from "react";
-
-function NotFound() {
+function NotFoundView() {
     return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
             <h2>¡Ups!</h2>
@@ -11,4 +9,4 @@ function NotFound() {
     );
 }
 
-export default NotFound;
+export default NotFoundView;

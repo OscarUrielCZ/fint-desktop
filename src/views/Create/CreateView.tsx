@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 
-import { ExpensesContext } from "../../context/ExpensesContext";
+import { ExpensesContext } from "../../context/ExpensesContext.js";
 import { toDateObject } from "../../utils.ts";
 // import { Expense } from "../../common/types.ts";
 import { generateRandomId } from "../../common/utils.ts";
@@ -32,7 +32,7 @@ const emptyExpense = {
  * Componente vista que sirve para crear nuevos egresos o también para editar ya existentes.
  * Para edición, se obtiene desde la url el ID del egreso a editar.
  */
-function Create({ updatingExpense }: { updatingExpense: unknown }) {
+function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
   const navigate = useNavigate();
   const { categories, insertExpense, updateExpense } =
     useContext(ExpensesContext);
@@ -238,4 +238,4 @@ const CategoryPicker = ({
   );
 };
 
-export default Create;
+export default CreateView;

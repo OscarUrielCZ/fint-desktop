@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { auth } from "../../firebase";
 
-function Login() {
+function LoginView() {
   const [email, setEmaiil] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
@@ -48,4 +48,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginView;

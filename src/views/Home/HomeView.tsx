@@ -21,11 +21,11 @@ import { Period } from "../../common/types.ts";
 
 // TODO: eliminar parametros del URL, se compartirán mediante el context
 // TODO: hacer un budget mensual, este se va a generar uno nuevo cada mes con los valores del mes anterior y el usuario tendrá que confirmarlo, este budget se usará para hacer gráficas de barras y de puntos (combinada, puntos el budget esperado y barras el gasto real)
-function Home() {
+function HomeView() {
   const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
 
-    const today = moment();
+  const today = moment();
   const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
     Period.MONTH
   );
@@ -120,4 +120,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeView;

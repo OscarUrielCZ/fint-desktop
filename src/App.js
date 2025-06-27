@@ -1,4 +1,3 @@
-import React from "react";
 import { ExpensesProvider } from "./context/ExpensesContext";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -7,44 +6,39 @@ import { AuthProvider } from "./context/AuthContext";
 
 import Root from "./routes/Root.tsx";
 
-import Category from "./views/Category/Category.tsx";
-import Home from "./views/Home/Home.tsx";
-import NotFound from "./views/NotFound/index.tsx";
-import Registry from "./views/Registry/index.tsx";
-import Login from "./views/Login/Login.tsx";
-import Create from "./views/Create/Create.tsx";
-import Update from "./views/Update/Update.tsx";
+import CategoryView from "./views/Category/CategoryView.tsx";
+import HomeView from "./views/Home/HomeView.tsx";
+import NotFoundView from "./views/NotFound/NotFoundView.tsx";
+import LoginView from "./views/Login/LoginView.tsx";
+import CreateView from "./views/Create/CreateView.tsx";
+import UpdateView from "./views/Update/UpdateView.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <NotFound />,
+    errorElement: <NotFoundView />,
     children: [
       {
         path: "fint-desktop/",
-        element: <ProtectedRoute element={Home} />,
+        element: <ProtectedRoute element={HomeView} />,
       },
       {
         path: "fint-desktop/login",
-        element: <Login />,
+        element: <LoginView />,
       },
       {
         path: "fint-desktop/create",
-        element: <ProtectedRoute element={Create} />,
+        element: <ProtectedRoute element={CreateView} />,
       },
       {
         path: "fint-desktop/update/:id",
-        element: <ProtectedRoute element={Update} />,
-      },
-      {
-        path: "fint-desktop/registro",
-        element: <ProtectedRoute element={Registry} />,
+        element: <ProtectedRoute element={UpdateView} />,
       },
       {
         path: "fint-desktop/category/:id",
-        element: <ProtectedRoute element={Category} />,
+        element: <ProtectedRoute element={CategoryView} />,
       },
     ],
   },

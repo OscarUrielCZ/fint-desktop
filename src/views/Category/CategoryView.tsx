@@ -6,12 +6,12 @@ import { Box, Typography } from "@mui/material";
 
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import ExpenseList from "../../components/ExpenseList/ExpenseList.tsx";
-import { ExpensesContext } from "../../context/ExpensesContext";
+import { ExpensesContext } from "../../context/ExpensesContext.js";
 import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import { Period } from "../../common/types.ts";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
-function Category() {
+function CategoryView() {
   const { id } = useParams();
   const { budget, categories, expensesFound } = useContext(ExpensesContext);
 
@@ -90,4 +90,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default CategoryView;

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
-import Create from "../Create/Create.tsx";
+import CreateView from "../Create/CreateView.tsx";
 import moment from "moment";
 
 function Update() {
@@ -29,7 +29,7 @@ function Update() {
   };
   // updatingExpense.date = moment(updatingExpense.date).format("YYYY-MM-DD");
 
-  return <Create updatingExpense={tempExpense} />;
+  return <CreateView updatingExpense={tempExpense} />;
 }
 
 export default Update;
