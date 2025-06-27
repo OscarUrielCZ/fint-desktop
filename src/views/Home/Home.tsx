@@ -1,8 +1,8 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import moment from "moment";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { Alert, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 // import AddButton from "../../components/AddButton/";
 import Modal from "../../modals/Modal.js";
@@ -22,21 +22,16 @@ import { Period } from "../../common/types.ts";
 // TODO: eliminar parametros del URL, se compartirán mediante el context
 // TODO: hacer un budget mensual, este se va a generar uno nuevo cada mes con los valores del mes anterior y el usuario tendrá que confirmarlo, este budget se usará para hacer gráficas de barras y de puntos (combinada, puntos el budget esperado y barras el gasto real)
 function Home() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const startParam = searchParams.get("start");
-  const endParam = searchParams.get("end");
-
   const { budget, categories, expensesFound, loading, syncData } =
     useContext(ExpensesContext);
 
-  // TODO: ajustar budget con el periodo seleccionado
+    const today = moment();
   const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
     Period.MONTH
   );
-  const [period, setPeriod] = useState<[string | null, string | null]>([
-    startParam,
-    endParam,
+  const [period, setPeriod] = useState<[string, string]>([
+    today.startOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
+    today.endOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
   ]);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -59,24 +54,6 @@ function Home() {
   expensesFiltered.forEach((expense) => {
     expenseQuantity += Number(expense.amount);
   });
-
-  // TODO: checar tantas recargas. CONSIDERAR borrar esta parte de busqueda por query, considerar cookies o localstorage
-  useEffect(
-    useCallback(() => {
-      const periodFilter = [period[0], period[1]];
-      if (period[0] === null && period[1] === null) {
-        const now = moment();
-        periodFilter[0] = now.startOf("month").format(DATE_PARAM_FORMAT);
-        periodFilter[1] = now.endOf("month").format(DATE_PARAM_FORMAT);
-        setPeriod([periodFilter[0], periodFilter[1]]);
-      }
-      setSearchParams({
-        start: periodFilter[0] as string,
-        end: periodFilter[1] as string,
-      });
-    }, [period]),
-    [period]
-  );
 
   return (
     <Box
