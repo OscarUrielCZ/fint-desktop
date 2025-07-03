@@ -43,7 +43,11 @@ function useStorage(storageName: string) {
             parsedData = JSON.parse(storage);
         }
 
-        setExpenses(parsedData.expenses.map(expense => ({ ...expense, date: new Date(expense.date) })).sort((a, b) => b.date - a.date)); // TODO: replace this date casting
+        
+        setExpenses(parsedData.expenses
+            .map(expense => ({ ...expense, date: new Date(expense.date) }))
+            .sort((a, b) => b.date.getTime() - a.date.getTime())
+        );
         setCategories(parsedData.categories);
         setBudget(parsedData.budget);
     };
@@ -112,7 +116,7 @@ function useStorage(storageName: string) {
 
     const insertExpense = (expense: Expense): void => {
         expense.status = StorageStatus.NEW;
-        const newExpenses: Expense[] = [ ...expenses, expense ];
+        const newExpenses: Expense[] = [ expense, ...expenses ];
         setExpenses(newExpenses);
         saveToLocalStorage(newExpenses, categories, budget as Budget);
     };
