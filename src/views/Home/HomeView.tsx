@@ -20,8 +20,6 @@ import Settings from "../../components/Settings/Settings.tsx";
 import { Period } from "../../common/types.ts";
 import { Expense } from "../../models/Expense.dto.ts";
 
-const LAST_EXPENSES_LIMIT = 5;
-
 // TODO: eliminar parametros del URL, se compartirán mediante el context
 // TODO: hacer un budget mensual, este se va a generar uno nuevo cada mes con los valores del mes anterior y el usuario tendrá que confirmarlo, este budget se usará para hacer gráficas de barras y de puntos (combinada, puntos el budget esperado y barras el gasto real)
 function HomeView() {
@@ -57,9 +55,6 @@ function HomeView() {
   expensesFiltered.forEach((expense) => {
     expenseQuantity += Number(expense.amount);
   });
-
-  // TODO: mostrar botón para mostrar todos los gastos
-  const lastExpenses = expensesFiltered.slice(0, LAST_EXPENSES_LIMIT);
 
   return (
     <Box
@@ -105,7 +100,7 @@ function HomeView() {
       {/* TODO: quitar registros del home y dejar solo los 3 últimos */}
       <ExpenseList
         title="Últimos gastos"
-        items={lastExpenses}
+        items={expensesFiltered}
         categories={categories}
       />
       {/* <AddButton /> */}
