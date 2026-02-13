@@ -1,12 +1,14 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React from "react";
 
 function Settings({
   onSync,
   onClose,
+  loading,
 }: {
   onSync: () => void;
   onClose: () => void;
+  loading: boolean;
 }) {
   return (
     <Box
@@ -14,18 +16,17 @@ function Settings({
         display: "flex",
         flexDirection: "column",
         gap: 1,
-        width: "80%",
-        backgroundColor: "white",
+        width: "100%",
         textAlign: "center",
-        p: 2,
+        backgroundColor: "white"
       }}
     >
       <Typography variant="h4">Settings</Typography>
-      <Button variant="outlined" onClick={onSync}>
-        Sincronizar datos
+      <Button variant="outlined" onClick={onSync} disabled={loading}>
+        {loading ? <CircularProgress size={24} /> : "Sincronizar datos"}
       </Button>
       <Button variant="contained" color="error" onClick={onClose}>
-        Cerrra
+        Cerrar
       </Button>
     </Box>
   );

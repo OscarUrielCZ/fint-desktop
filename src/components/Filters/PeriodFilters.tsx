@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 import { Box, MenuItem, Select, Typography } from "@mui/material";
@@ -67,7 +67,7 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 3fr", mt: 2 }}>
         {periodType === Period.MONTH && (
           <Fragment>
-            <Typography>Selecciona un mes </Typography>
+            <Typography>Mes </Typography>
             <Select
               label="Mes"
               value={selectedMonth}
@@ -90,7 +90,7 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
         )}
         {periodType !== Period.FULL && (
           <Fragment>
-            <Typography>Selecciona un año</Typography>
+            <Typography>Año</Typography>
             <Select
               label="Año"
               value={selectedYear}

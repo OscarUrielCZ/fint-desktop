@@ -14,6 +14,8 @@ import CreateView from "./views/Create/CreateView.tsx";
 import UpdateView from "./views/Update/UpdateView.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 
+
+// TODO: update this router to use config/routes.ts
 const router = createBrowserRouter([
   {
     path: "/",

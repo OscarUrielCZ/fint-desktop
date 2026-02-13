@@ -1,11 +1,9 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import moment from "moment";
-import { Link } from "react-router-dom";
 
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 
 // import AddButton from "../../components/AddButton/";
-import Modal from "../../modals/Modal.js";
 import CategoryGridStatistics from "../../components/Statistics/CategoryGridStatistics.tsx";
 import ExpenseList from "../../components/ExpenseList/ExpenseList.tsx";
 import ExpenseSearch from "../../components/ExpenseSearch/ExpenseSearch.tsx";
@@ -16,7 +14,6 @@ import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 import colors from "../../common/colors.ts";
 import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
-import Settings from "../../components/Settings/Settings.tsx";
 import { Period } from "../../common/types.ts";
 import { Expense } from "../../models/Expense.dto.ts";
 
@@ -34,7 +31,6 @@ function HomeView() {
     today.startOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
     today.endOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
   ]);
-  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const expensesFiltered = expensesFound.filter((expense: Expense) => {
     return (
@@ -67,15 +63,6 @@ function HomeView() {
         marginBottom: 6,
       }}
     >
-      <Box>
-        <Button
-          variant="contained"
-          onClick={() => setOpenModal(true)}
-          sx={{ float: "right" }}
-        >
-          Configuración
-        </Button>
-      </Box>
       {period[0] !== null && period[1] !== null && (
         <PeriodFilters
           period={period}
@@ -104,19 +91,6 @@ function HomeView() {
         categories={categories}
       />
       {/* <AddButton /> */}
-      <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
-        <Button variant="contained" fullWidth>
-          <Link to="create" style={{ color: "white", textDecoration: "none" }}>
-            Registrar
-          </Link>
-        </Button>
-      </Box>
-
-      {openModal && (
-        <Modal>
-          <Settings onSync={syncData} onClose={() => setOpenModal(false)} />
-        </Modal>
-      )}
     </Box>
   );
 }
