@@ -12,7 +12,6 @@ import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
 import ResumeExpenses from "../../components/ResumeExpenses/index.tsx";
 
 import colors from "../../common/colors.ts";
-import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
 import { Period } from "../../common/types.ts";
 import { Expense } from "../../models/Expense.dto.ts";
@@ -20,24 +19,24 @@ import { Expense } from "../../models/Expense.dto.ts";
 // TODO: eliminar parametros del URL, se compartirán mediante el context
 // TODO: hacer un budget mensual, este se va a generar uno nuevo cada mes con los valores del mes anterior y el usuario tendrá que confirmarlo, este budget se usará para hacer gráficas de barras y de puntos (combinada, puntos el budget esperado y barras el gasto real)
 function HomeView() {
-  const { budget, categories, expensesFound, loading, syncData } =
+  const { budget, categories, expensesFound, loading } =
     useContext(ExpensesContext);
 
   const today = moment();
   const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
     Period.MONTH
   );
-  const [period, setPeriod] = useState<[string, string]>([
-    today.startOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
-    today.endOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
+  const [period, setPeriod] = useState<[Date, Date]>([
+    today.startOf(defaultPeriodType as any).toDate(),
+    today.endOf(defaultPeriodType as any).toDate(),
   ]);
 
   const expensesFiltered = expensesFound.filter((expense: Expense) => {
     return (
       period[0] !== null &&
       period[1] !== null &&
-      expense.date.getTime() >= new Date(period[0]).getTime() &&
-      expense.date.getTime() <= new Date(period[1]).getTime()
+      expense.date.getTime() >= period[0].getTime() &&
+      expense.date.getTime() <= period[1].getTime()
     );
   });
 

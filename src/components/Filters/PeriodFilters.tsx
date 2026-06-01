@@ -5,10 +5,8 @@ import { Box, MenuItem, Select, Typography } from "@mui/material";
 
 import Chip from "../Chip/index.tsx";
 
-import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import { Period } from "../../common/types.ts";
 
-// TODO: cambiar tipo de period de string a date, tener cuidado con el formato en Home.tsx
 function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
   const now = moment(period[0]);
 
@@ -21,14 +19,14 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
         const dateRef = `${selectedYear}-${selectedMonth}-01`;
         const d = moment(dateRef);
 
-        const start = d.startOf(periodType).format(DATE_PARAM_FORMAT);
-        const end = d.endOf(periodType).format(DATE_PARAM_FORMAT);
+        const start = d.startOf(periodType).toDate();
+        const end = d.endOf(periodType).toDate();
 
         setPeriod([start, end]);
       } else if (periodType === Period.FULL) {
         setPeriod([
-          moment("2023-01-01").format(DATE_PARAM_FORMAT),
-          moment().format(DATE_PARAM_FORMAT),
+          moment("2023-01-01").toDate(),
+          moment().toDate(),
         ]);
       }
     }, [selectedYear, selectedMonth, periodType]),

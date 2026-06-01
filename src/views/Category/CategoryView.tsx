@@ -4,7 +4,6 @@ import moment from "moment";
 
 import { Box, Typography } from "@mui/material";
 
-import { DATE_PARAM_FORMAT } from "../../common/constants.ts";
 import ExpenseList from "../../components/ExpenseList/ExpenseList.tsx";
 import { ExpensesContext } from "../../context/ExpensesContext.js";
 import PeriodFilters from "../../components/Filters/PeriodFilters.tsx";
@@ -19,9 +18,9 @@ function CategoryView() {
   const [defaultPeriodType, setDefaultPeriodType] = useState<Period>(
     Period.MONTH
   );
-  const [period, setPeriod] = useState<[string, string]>([
-    today.startOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
-    today.endOf(defaultPeriodType as any).format(DATE_PARAM_FORMAT),
+  const [period, setPeriod] = useState<[Date, Date]>([
+    today.startOf(defaultPeriodType as any).toDate(),
+    today.endOf(defaultPeriodType as any).toDate(),
   ]);
 
   // TODO: gráfica de barras agnóstica al periodo seleccionado que muestre el gasto por mes
@@ -33,8 +32,8 @@ function CategoryView() {
   const categoryExpenses = expensesFound.filter(
     (expense) =>
       expense.categoryId === id &&
-      expense.date.getTime() >= new Date(period[0]).getTime() &&
-      expense.date.getTime() <= new Date(period[1]).getTime()
+      expense.date.getTime() >= period[0].getTime() &&
+      expense.date.getTime() <= period[1].getTime()
   );
   const totalAmount = categoryExpenses.reduce(
     (acc, expense) => acc + Number(expense.amount),
