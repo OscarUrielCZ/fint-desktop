@@ -28,6 +28,7 @@ function ExpensesProvider(props) {
     deleteExpense,
     insertExpense,
     syncData,
+    saveMany,
     updateExpense,
   } = useStorage(STORAGE_ID);
 
@@ -62,6 +63,7 @@ function ExpensesProvider(props) {
         clearExpenseForm,
         deleteExpense,
         insertExpense,
+        saveMany,
         setSearchValue,
         syncData,
         updateExpense,

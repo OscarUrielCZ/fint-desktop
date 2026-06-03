@@ -94,6 +94,7 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
+              <MenuItem value="2027">2027</MenuItem>
               <MenuItem value="2026">2026</MenuItem>
               <MenuItem value="2025">2025</MenuItem>
               <MenuItem value="2024">2024</MenuItem>

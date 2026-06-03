@@ -10,6 +10,8 @@ import {
   CardActionArea,
   CardContent,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import moment from "moment";
@@ -18,6 +20,7 @@ import { ExpensesContext } from "../../context/ExpensesContext.js";
 import { toDateObject } from "../../utils.ts";
 // import { Expense } from "../../common/types.ts";
 import { generateRandomId } from "../../common/utils.ts";
+import { StorageStatus } from "../../common/types.ts";
 
 const emptyExpense = {
   id: null,
@@ -25,7 +28,10 @@ const emptyExpense = {
   subcategoryId: "",
   description: "",
   amount: "",
+  paymentType: "cash",
+  months: "1",
   date: moment(new Date()).format("YYYY-MM-DD"),
+  creditOperationId: null,
 };
 
 /**
@@ -34,7 +40,7 @@ const emptyExpense = {
  */
 function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
   const navigate = useNavigate();
-  const { categories, insertExpense, updateExpense } =
+  const { categories, insertExpense, updateExpense, saveMany } =
     useContext(ExpensesContext);
 
   const [error, setError] = useState<string>("");
@@ -47,14 +53,14 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
     navigate(-1);
   };
 
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExpense({
       ...expense,
       [e.target.name]: e.target.value,
     });
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // validations
@@ -68,17 +74,46 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
     }
     setError("");
 
-    let newExpense = expense;
+    if (expense.id !== null) { // Id already exists, so it's an update
+      const updatedExpense = {
+        ...expense,
+        date: toDateObject(expense.date),
+      };
+      updateExpense(updatedExpense);
+    } else { // No Id, so it's a new expense
+      if (expense.paymentType === "interest-free") {
+        const creditOperationId = generateRandomId();
+        const n = parseInt(expense.months);
+        const monthlyAmount = expense.amount / n;
+        const expensesToSave = [];
 
-    if (newExpense.id !== null) {
-      // ya existe, i.e. es actualización
-      newExpense.date = toDateObject(expense.date);
-      updateExpense(newExpense);
-    } else {
-      // es nuevo
-      newExpense.date = toDateObject(expense.date);
-      newExpense.id = generateRandomId();
-      insertExpense(newExpense);
+        for (let i = 1; i <= n; i++) {
+          const date = moment(expense.date, "YYYY-MM-DD")
+            .add(i - 1, "months")
+            .toDate();
+          const description = `${expense.description || ""} (${i}/${n})`.trim();
+
+          const newExpensePart = {
+            ...expense,
+            
+            id: generateRandomId(),
+            creditOperationId,
+            amount: monthlyAmount,
+            date,
+            description,
+            status: StorageStatus.NEW,
+          };
+          expensesToSave.push(newExpensePart);
+        }
+        saveMany(expensesToSave);
+      } else {
+        const newExpense = {
+          ...expense,
+          id: generateRandomId(),
+          date: toDateObject(expense.date),
+        };
+        insertExpense(newExpense);
+      }
     }
 
     // TODO: factorizar rutas en un archivo general routes.js
@@ -143,13 +178,66 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
           prefix="$"
           required
         />
+
+        <ToggleButtonGroup
+          color="primary"
+          value={expense.paymentType}
+          exclusive
+          onChange={(_, newPaymentType) => {
+            if (newPaymentType !== null) {
+              setExpense({ ...expense, paymentType: newPaymentType });
+            }
+          }}
+          aria-label="Tipo de pago"
+          fullWidth
+          sx={{ mt: 2 }}
+        >
+          <ToggleButton value="cash">Efectivo</ToggleButton>
+          <ToggleButton value="interest-free">Meses sin intereses</ToggleButton>
+        </ToggleButtonGroup>
+
+        {expense.paymentType === "interest-free" && (
+          <NumericFormat
+            value={expense.months}
+            onValueChange={({ floatValue }) =>
+              setExpense({ ...expense, months: floatValue })
+            }
+            name="months"
+            customInput={TextField}
+            variant="standard"
+            label="Número de meses"
+            sx={{ width: "100%", mt: 2 }}
+            decimalScale={0}
+            allowNegative={false}
+            isAllowed={(values) => {
+              const { floatValue } = values;
+              return floatValue === undefined || floatValue > 0;
+            }}
+            required
+          />
+        )}
+
+        {expense.paymentType === "interest-free" &&
+          expense.amount > 0 &&
+          expense.months > 0 && (
+            <Typography variant="body1" sx={{ mt: 1, display: "block" }}>
+              Pago mensual estimado: $
+              {(expense.amount / expense.months).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </Typography>
+          )}
+
         <TextField
           value={expense.date}
           onChange={onChange}
           name="date"
           type="date"
           variant="standard"
-          label="Fecha"
+          label={
+            expense.paymentType === "cash" ? "Fecha" : "Fecha de corte"
+          }
           sx={{ width: "100%", mt: 2 }}
           required
         />

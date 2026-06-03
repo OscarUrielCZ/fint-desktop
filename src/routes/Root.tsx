@@ -49,7 +49,7 @@ function Root() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Typography sx={{ flexGrow: 1 }}>v0.2.5</Typography>
+          <Typography sx={{ flexGrow: 1 }}>v0.2.6</Typography>
           <IconButton
             color="inherit"
             aria-label="add expense"

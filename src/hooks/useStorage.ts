@@ -10,6 +10,9 @@ import { useAuth } from "./useAuth.ts";
 
 let service: FirebaseFintService;
 
+// TODO: check all functions that are not part of the storage hook
+//       e.g. insert expense does more than just intreracting with storage, sets expenses state which should be in a context shared, not here
+//          implementing the correct function `save` agnostic to the user, and internally save to the desired storage (localStorage or DB)
 function useStorage(storageName: string) {
     const [loading, setLoading] = useState<boolean>(true);
     const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -121,6 +124,13 @@ function useStorage(storageName: string) {
         saveToLocalStorage(newExpenses, categories, budget as Budget);
     };
 
+    const saveMany = (expensesToSave: Expense[]) => {
+        const currentExpenses = [...expenses]; // TODO: this should be taken from the context once this TODO above all is complete
+        const updatedExpenses = [...currentExpenses, ...expensesToSave];
+        setExpenses(updatedExpenses); // TODO: this should be set in the context once this TODO above all is complete
+        saveToLocalStorage(updatedExpenses, categories, budget as Budget);
+    }
+
     const updateExpense = (updatedExpense: Expense): void => {
         const updatedExpenses: Expense[] = expenses.map(expense => {
             if (expense.id === updatedExpense.id) {
@@ -135,7 +145,7 @@ function useStorage(storageName: string) {
     };
 
     return { expenses, categories, budget, loading,
-        insertExpense, deleteExpense, updateExpense, syncData };
+        insertExpense, deleteExpense, updateExpense, saveMany, syncData };
 }
 
 export default useStorage;
