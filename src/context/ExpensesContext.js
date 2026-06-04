@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useMemo } from "react";
 
 import moment from "moment";
 
@@ -36,18 +36,20 @@ function ExpensesProvider(props) {
     setFormExpense(defaultExpense);
   };
 
-  let expensesFound =
-    searchValue.length === 0
-      ? expenses
-      : expenses.filter((exp) => {
-          const searchText = searchValue.toLowerCase();
-          const descText = exp.description.toLowerCase();
+  const expensesFound = useMemo(() => {
+    let filtered =
+      searchValue.length === 0
+        ? expenses
+        : expenses.filter((exp) => {
+            const searchText = searchValue.toLowerCase();
+            const descText = exp.description.toLowerCase();
 
-          return descText.includes(searchText);
-        });
-  expensesFound = expensesFound.filter(
-    (expense) => expense.status !== StorageStatus.DELETED
-  );
+            return descText.includes(searchText);
+          });
+    return filtered.filter(
+      (expense) => expense.status !== StorageStatus.DELETED
+    );
+  }, [expenses, searchValue]);
 
   return (
     <ExpensesContext.Provider

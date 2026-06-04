@@ -70,25 +70,31 @@ function useStorage(storageName: string) {
      * Persists all data in DB
      */
     const syncData = async () => {
-        // checks out each expense
-        expenses.forEach(async expense => {
-            if (expense.status) {   
+        // checks out each expense and collects mutation promises
+        const mutationPromises = expenses
+            .filter(expense => expense.status)
+            .map(expense => {
                 if (expense.status === StorageStatus.NEW) {
-                    service.saveExpense(expense);
+                    return service.saveExpense(expense);
                 } else if (expense.status === StorageStatus.UPDATED) {
-                    service.updateExpense(expense);
+                    return service.updateExpense(expense);
                 } else if (expense.status === StorageStatus.DELETED) {
-                    service.removeExpense(expense.id);
+                    return service.removeExpense(expense.id);
                 }
-            }
-        });
+                return Promise.resolve();
+            });
 
-        const expenseList: Expense[] = await service.getExpenses();
-        const categoriesData: CategoriesMap = await service.getCategories();
-        // TODO: handle new budgets
-        const budgetData: Budget | null = await service.getBudget().catch(() => null);
+        // Await all mutations in parallel
+        await Promise.all(mutationPromises);
+
+        // Fetch all fresh data in parallel (Eliminating Waterfalls)
+        const [expenseList, categoriesData, budgetData] = await Promise.all([
+            service.getExpenses(),
+            service.getCategories(),
+            service.getBudget().catch(() => null)
+        ]);
+
         let finalBudget = budgetData;
-
         if (budgetData == null) {
             finalBudget = service.buildBudget(categoriesData);
         }

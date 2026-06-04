@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import moment from "moment";
 
 import { Box } from "@mui/material";
@@ -31,25 +31,35 @@ function HomeView() {
     today.endOf(defaultPeriodType as any).toDate(),
   ]);
 
-  const expensesFiltered = expensesFound.filter((expense: Expense) => {
+  const expensesFiltered = useMemo(() => {
+    return expensesFound.filter((expense: Expense) => {
+      return (
+        period[0] !== null &&
+        period[1] !== null &&
+        expense.date.getTime() >= period[0].getTime() &&
+        expense.date.getTime() <= period[1].getTime()
+      );
+    });
+  }, [expensesFound, period]);
+
+  const totalBudget = useMemo(() => {
     return (
-      period[0] !== null &&
-      period[1] !== null &&
-      expense.date.getTime() >= period[0].getTime() &&
-      expense.date.getTime() <= period[1].getTime()
+      budget?.items?.reduce((acc, item) => {
+        return acc + Number(item.amount);
+      }, 0) || 0
     );
-  });
+  }, [budget]);
 
-  const totalBudget =
-    budget?.items?.reduce((acc, item) => {
-      return acc + Number(item.amount);
-    }, 0) || 0;
-  let expenseQuantity: number = 0;
-  let expensesCount: number = expensesFiltered.length;
-
-  expensesFiltered.forEach((expense) => {
-    expenseQuantity += Number(expense.amount);
-  });
+  const { expenseQuantity, expensesCount } = useMemo(() => {
+    let quantity = 0;
+    expensesFiltered.forEach((expense) => {
+      quantity += Number(expense.amount);
+    });
+    return {
+      expenseQuantity: quantity,
+      expensesCount: expensesFiltered.length,
+    };
+  }, [expensesFiltered]);
 
   return (
     <Box

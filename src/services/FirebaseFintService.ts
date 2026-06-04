@@ -24,12 +24,12 @@ class FirebaseFintService implements IFintService {
         return findBudgetByUserId(this.userId);
     }
 
-    removeExpense(id: string) {
-        remove(id);
+    removeExpense(id: string): Promise<void> {
+        return remove(id);
     }
 
-    saveExpense(expense: Expense) {
-        save({
+    saveExpense(expense: Expense): Promise<void> {
+        return save({
             userId: this.userId,
             amount: expense.amount,
             date: expense.date,
@@ -39,8 +39,8 @@ class FirebaseFintService implements IFintService {
         } as NewExpense);
     }
 
-    updateExpense(expense: Expense) {
-        update(expense.id, {
+    updateExpense(expense: Expense): Promise<void> {
+        return update(expense.id, {
             userId: this.userId,
             amount: expense.amount,
             date: expense.date,
