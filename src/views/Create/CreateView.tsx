@@ -6,9 +6,10 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  CardActionArea,
-  CardContent,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -21,6 +22,7 @@ import { toDateObject } from "../../utils.ts";
 // import { Expense } from "../../common/types.ts";
 import { generateRandomId } from "../../common/utils.ts";
 import { StorageStatus } from "../../common/types.ts";
+import { CategoriesMap } from "../../models/Category.dto.ts";
 
 const emptyExpense = {
   id: null,
@@ -124,6 +126,7 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
     setExpense({
       ...expense,
       categoryId: id,
+      subcategoryId: null,
     });
   };
 
@@ -274,55 +277,35 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
   );
 }
 
+interface CategoryPickerProps {
+  categories: CategoriesMap;
+  selectedCategory: string;
+  setSelectedCategory: (id: string) => void;
+  title: string;
+}
+
 const CategoryPicker = ({
   categories,
   selectedCategory,
   setSelectedCategory,
   title,
-}) => {
+}: CategoryPickerProps) => {
   return (
-    <Box sx={{ mt: 2 }}>
-      <Typography>{title}</Typography>
-      <Box
-        sx={{
-          width: "100%",
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fill, minmax(max(100px, 30%), 1fr))",
-          gap: 1,
-        }}
+    <FormControl variant="standard" fullWidth sx={{ mt: 2 }}>
+      <InputLabel id={`${title}-label`}>{title}</InputLabel>
+      <Select
+        labelId={`${title}-label`}
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        label={title}
       >
         {Object.entries(categories).map(([id, category]: [string, any]) => (
-          <Card
-            key={id}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <CardActionArea>
-              <CardContent
-                onClick={() => setSelectedCategory(id)}
-                data-active={selectedCategory === id ? "" : undefined}
-                sx={{
-                  height: "100%",
-                  "&[data-active]": {
-                    backgroundColor: "action.selected",
-                    "&:hover": {
-                      backgroundColor: "action.selectedHover",
-                    },
-                  },
-                }}
-              >
-                <Typography textAlign="center">
-                  {category.displayValue}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+          <MenuItem key={id} value={id}>
+            {category.displayValue}
+          </MenuItem>
         ))}
-      </Box>
-    </Box>
+      </Select>
+    </FormControl>
   );
 };
 

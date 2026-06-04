@@ -7,6 +7,7 @@ import FirebaseFintService from "../services/FirebaseFintService.ts";
 import { CategoriesMap } from "../models/Category.dto.ts";
 import { Budget } from "../models/Budget.dto.ts";
 import { useAuth } from "./useAuth.ts";
+import { sortCategoriesMap } from "../common/utils.ts";
 
 let service: FirebaseFintService;
 
@@ -51,7 +52,7 @@ function useStorage(storageName: string) {
             .map(expense => ({ ...expense, date: new Date(expense.date) }))
             .sort((a, b) => b.date.getTime() - a.date.getTime())
         );
-        setCategories(parsedData.categories);
+        setCategories(sortCategoriesMap(parsedData.categories));
         setBudget(parsedData.budget);
     };
 
@@ -94,9 +95,10 @@ function useStorage(storageName: string) {
 
         // update and save data
         setExpenses(expenseList);
-        setCategories(categoriesData);
+        const sortedCategories = sortCategoriesMap(categoriesData);
+        setCategories(sortedCategories);
         setBudget(finalBudget);
-        saveToLocalStorage(expenseList, categoriesData, finalBudget as Budget);
+        saveToLocalStorage(expenseList, sortedCategories, finalBudget as Budget);
     }
 
     const deleteExpense = (id: string): void => {

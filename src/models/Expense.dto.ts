@@ -7,7 +7,10 @@ export type Expense = {
     description: string,
     categoryId: string,
     subcategoryId: string | null,
-    status?: StorageStatus
+    status?: StorageStatus,
+    paymentType?: string,
+    months?: number,
+    creditOperationId?: string | null,
 }
 
 /**
