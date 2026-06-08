@@ -1,34 +1,29 @@
 import React, { useContext, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Add, Logout, Settings as SettingsIcon } from "@mui/icons-material";
+import { Box, Toolbar, CssBaseline } from "@mui/material";
+import { toast } from "react-toastify";
 
 import { auth } from "../firebase";
-import routes from "../config/routes.ts";
 import Modal from "../modals/Modal.js";
 import Settings from "../components/Settings/Settings.tsx";
 import { ExpensesContext } from "../context/ExpensesContext.js";
-import { toast } from "react-toastify";
+import Sidebar from "../components/Layout/Sidebar.tsx";
+import TopBar from "../components/Layout/TopBar.tsx";
+
+const drawerWidth = 240;
 
 function Root() {
-  const navigate = useNavigate();
   const { syncData } = useContext(ExpensesContext);
   const [openModal, setOpenModal] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
+  const location = useLocation();
+
+  // Don't show sidebar/topbar on login page
+  const isLoginPage = location.pathname.includes("/login");
 
   const logout = () => {
     signOut(auth);
-  };
-
-  const handleAddExpense = () => {
-    navigate(routes.create.path);
   };
 
   const handleSyncData = async () => {
@@ -45,40 +40,32 @@ function Root() {
     }
   };
 
+  if (isLoginPage) {
+    return <Outlet />;
+  }
+
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography sx={{ flexGrow: 1 }}>v0.2.6</Typography>
-          <IconButton
-            color="inherit"
-            aria-label="add expense"
-            onClick={handleAddExpense}
-            sx={{ backgroundColor: "primary.main", "&:hover": { backgroundColor: "primary.dark" } }}
-          >
-            <Add /> <Typography> NUEVO</Typography>
-          </IconButton>
-          <IconButton
-            color="inherit"
-            aria-label="settings"
-            onClick={() => setOpenModal(true)}
-            sx={{ marginLeft: 2, "&:hover": { backgroundColor: "secondary.dark" } }}
-          >
-            <SettingsIcon />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            aria-label="logout"
-            onClick={logout}
-            sx={{ marginLeft: 2, "&:hover": { backgroundColor: "secondary.dark" } }}
-          >
-            <Logout />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ mt: 4, p: 2 }}>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <TopBar
+        onSettingsOpen={() => setOpenModal(true)}
+        onLogout={logout}
+      />
+      <Sidebar version="v0.3.0" />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          minHeight: "100vh",
+          backgroundColor: "background.default",
+        }}
+      >
+        <Toolbar /> {/* Space for TopBar */}
         <Outlet />
       </Box>
+
       {openModal && (
         <Modal>
           <Box
@@ -97,7 +84,7 @@ function Root() {
           </Box>
         </Modal>
       )}
-    </>
+    </Box>
   );
 }
 

@@ -83,10 +83,17 @@ function CategoryGridItem({
     >
       <Box
         sx={{
-          p: 1,
-          borderRadius: 1,
+          p: 1.5,
+          borderRadius: 2,
           backgroundColor: color,
           cursor: "pointer",
+          color: "text.primary", // Dark text on light background
+          border: "1px solid rgba(0,0,0,0.04)",
+          transition: "transform 0.2s",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          }
         }}
       >
         <Typography variant="body1">{categoryName}</Typography>

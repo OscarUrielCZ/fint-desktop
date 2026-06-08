@@ -1,5 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { ExpensesProvider } from "./context/ExpensesContext";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./theme.ts";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -15,6 +17,11 @@ const NotFoundView = lazy(() => import("./views/NotFound/NotFoundView.tsx"));
 const LoginView = lazy(() => import("./views/Login/LoginView.tsx"));
 const CreateView = lazy(() => import("./views/Create/CreateView.tsx"));
 const UpdateView = lazy(() => import("./views/Update/UpdateView.tsx"));
+const DashboardView = lazy(() => import("./views/Dashboard/DashboardView.tsx"));
+const IncomeView = lazy(() => import("./views/Income/IncomeView.tsx"));
+const InvestmentsView = lazy(() => import("./views/Investments/InvestmentsView.tsx"));
+const BudgetView = lazy(() => import("./views/Budget/BudgetView.tsx"));
+const CategoryListView = lazy(() => import("./views/Category/CategoryListView.tsx"));
 
 // TODO: update this router to use config/routes.ts
 const router = createBrowserRouter([
@@ -26,6 +33,26 @@ const router = createBrowserRouter([
       {
         path: "fint-desktop/",
         element: <ProtectedRoute element={HomeView} />,
+      },
+      {
+        path: "fint-desktop/dashboard",
+        element: <ProtectedRoute element={DashboardView} />,
+      },
+      {
+        path: "fint-desktop/income",
+        element: <ProtectedRoute element={IncomeView} />,
+      },
+      {
+        path: "fint-desktop/investments",
+        element: <ProtectedRoute element={InvestmentsView} />,
+      },
+      {
+        path: "fint-desktop/budget",
+        element: <ProtectedRoute element={BudgetView} />,
+      },
+      {
+        path: "fint-desktop/categories",
+        element: <ProtectedRoute element={CategoryListView} />,
       },
       {
         path: "fint-desktop/login",
@@ -51,9 +78,11 @@ function App() {
   return (
     <AuthProvider>
       <ExpensesProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
+        <ThemeProvider theme={theme}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </ThemeProvider>
       </ExpensesProvider>
     </AuthProvider>
   );

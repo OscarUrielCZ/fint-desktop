@@ -49,7 +49,7 @@ function ExpenseListItem({
           textAlign: "center",
         }}
       >
-        <Typography variant="subtitle2" color="grey">
+        <Typography variant="subtitle2" color="text.secondary">
           {getFormattedDate(date)}
         </Typography>
         <Typography variant="h6">${amount}</Typography>

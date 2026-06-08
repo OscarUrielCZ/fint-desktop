@@ -39,7 +39,8 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
         <Chip
           onClick={() => setPeriodType(Period.MONTH)}
           style={{
-            backgroundColor: periodType === Period.MONTH ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.MONTH ? "#1F3F1B" : "#e2e8f0",
+            color: periodType === Period.MONTH ? "#ffffff" : "#475569",
           }}
         >
           Mes
@@ -47,7 +48,8 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
         <Chip
           onClick={() => setPeriodType(Period.YEAR)}
           style={{
-            backgroundColor: periodType === Period.YEAR ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.YEAR ? "#1F3F1B" : "#e2e8f0",
+            color: periodType === Period.YEAR ? "#ffffff" : "#475569",
           }}
         >
           Año
@@ -55,7 +57,8 @@ function PeriodFilters({ period, setPeriod, periodType, setPeriodType }: any) {
         <Chip
           onClick={() => setPeriodType(Period.FULL)}
           style={{
-            backgroundColor: periodType === Period.FULL ? "#9EA1D4" : "#ddd",
+            backgroundColor: periodType === Period.FULL ? "#1F3F1B" : "#e2e8f0",
+            color: periodType === Period.FULL ? "#ffffff" : "#475569",
           }}
         >
           Todo

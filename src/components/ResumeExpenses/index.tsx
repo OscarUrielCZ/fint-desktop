@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { numberWithCommas } from "../../common/utils.ts";
 
 import "./ResumeExpenses.css";
-import { getLevelColor } from "../../common/constants.ts";
+import { getLevelColor, getLevelTextColor } from "../../common/constants.ts";
 
 type ResumeExpensesType = {
   expenseQuantity: number;
@@ -23,7 +23,7 @@ function ResumeExpenses({
       : expenseQuantity === 0
       ? 0
       : 1;
-  const color = getLevelColor(percentage);
+  const textColor = getLevelTextColor(percentage);
 
   return (
     <Box
@@ -33,14 +33,16 @@ function ResumeExpenses({
         alignItems: "center",
       }}
     >
-      <Typography variant="body1">{expensesCount} movimientos</Typography>
+      <Typography variant="body1" color="text.secondary">{expensesCount} movimientos</Typography>
       <Box sx={{ display: "flex", textAlign: "center" }}>
-        <Typography variant="h6">
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Total{" "}
-          <span style={{ fontWeight: "bold", color }}>
+          <span style={{ color: textColor }}>
             ${numberWithCommas(expenseQuantity)}
           </span>
-          /${numberWithCommas(totalBudget)}
+          <Typography component="span" variant="h6" color="text.secondary">
+            /${numberWithCommas(totalBudget)}
+          </Typography>
         </Typography>
       </Box>
       <Typography>
