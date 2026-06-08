@@ -1,15 +1,19 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-import { Typography } from "@mui/material";
-
 import { useAuth } from "../hooks/useAuth.ts";
 
-const ProtectedRoute = ({ element: Element, ...rest }) => {
-  const { user, loading }: any = useAuth();
+import LoadingExpenses from "../components/LoadingExpenses/index.js";
+
+interface ProtectedRouteProps {
+  element: React.ComponentType;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element: Element }) => {
+  const { user, loading } = useAuth() as any;
 
   if (loading) {
-    return <Typography>Loading...</Typography>; // TODO: Create loading component (spinner)
+    return <LoadingExpenses />;
   }
 
   if (!user) {
