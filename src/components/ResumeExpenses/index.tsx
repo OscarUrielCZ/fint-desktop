@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { numberWithCommas } from "../../common/utils.ts";
 
 import "./ResumeExpenses.css";
-import { getLevelColor, getLevelTextColor } from "../../common/constants.ts";
+import { getLevelTextColor } from "../../common/constants.ts";
 
 type ResumeExpensesType = {
   expenseQuantity: number;

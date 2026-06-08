@@ -15,14 +15,16 @@ import {
   Settings as SettingsIcon,
   AccountCircle,
   Logout as LogoutIcon,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 
 interface TopBarProps {
   onSettingsOpen: () => void;
   onLogout: () => void;
+  onDrawerToggle: () => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onSettingsOpen, onLogout }) => {
+const TopBar: React.FC<TopBarProps> = ({ onSettingsOpen, onLogout, onDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
 
@@ -51,6 +53,16 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsOpen, onLogout }) => {
       }}
     >
       <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={onDrawerToggle}
+          sx={{ mr: 2, display: { sm: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 700, color: theme.palette.primary.main }}>
           fint
         </Typography>

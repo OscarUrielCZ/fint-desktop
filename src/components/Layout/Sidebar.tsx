@@ -28,9 +28,11 @@ const drawerWidth = 240;
 
 interface SidebarProps {
   version: string;
+  mobileOpen: boolean;
+  onDrawerToggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ version }) => {
+const Sidebar: React.FC<SidebarProps> = ({ version, mobileOpen, onDrawerToggle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -46,28 +48,16 @@ const Sidebar: React.FC<SidebarProps> = ({ version }) => {
 
   const handleNavigation = (path: string) => {
     navigate(path);
+    onDrawerToggle(); // Close drawer on mobile after navigation
   };
 
   const handleAddExpense = () => {
     navigate("/" + routes.create.path);
+    onDrawerToggle();
   };
 
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          borderRight: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper,
-          display: "flex",
-          flexDirection: "column",
-        },
-      }}
-    >
+  const drawerContent = (
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Toolbar />
       
       <Box sx={{ p: 2, pt: 3 }}>
@@ -86,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ version }) => {
             "&:hover": {
               backgroundColor: theme.palette.primary.dark,
             },
-            boxShadow: `0 4px 12px ${theme.palette.primary.main}33`, // 33 is approx 20% opacity
+            boxShadow: `0 4px 12px ${theme.palette.primary.main}33`,
           }}
         >
           Add Expense
@@ -104,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ version }) => {
                   margin: "4px 8px",
                   borderRadius: "8px",
                   "&.Mui-selected": {
-                    backgroundColor: `${theme.palette.primary.main}14`, // 14 is approx 8% opacity
+                    backgroundColor: `${theme.palette.primary.main}14`,
                     color: theme.palette.primary.main,
                     "& .MuiListItemIcon-root": {
                       color: theme.palette.primary.main,
@@ -133,7 +123,48 @@ const Sidebar: React.FC<SidebarProps> = ({ version }) => {
           Version {version}
         </Typography>
       </Box>
-    </Drawer>
+    </Box>
+  );
+
+  return (
+    <Box
+      component="nav"
+      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      aria-label="mailbox folders"
+    >
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+      
+      {/* Desktop Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": { 
+            boxSizing: "border-box", 
+            width: drawerWidth,
+            borderRight: `1px solid ${theme.palette.divider}`,
+            backgroundColor: theme.palette.background.paper,
+          },
+        }}
+        open
+      >
+        {drawerContent}
+      </Drawer>
+    </Box>
   );
 };
 

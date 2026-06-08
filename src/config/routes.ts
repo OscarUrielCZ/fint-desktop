@@ -9,7 +9,7 @@ import InvestmentsView from "../views/Investments/InvestmentsView.tsx";
 import BudgetView from "../views/Budget/BudgetView.tsx";
 import CategoryListView from "../views/Category/CategoryListView.tsx";
 
-export default {
+const routes = {
     login: {
         path: "fint-desktop/login",
         element: LoginView,
@@ -51,3 +51,5 @@ export default {
         element: CategoryView,
     },
 };
+
+export default routes;

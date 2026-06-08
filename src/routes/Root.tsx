@@ -17,6 +17,7 @@ function Root() {
   const { syncData } = useContext(ExpensesContext);
   const [openModal, setOpenModal] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
   // Don't show sidebar/topbar on login page
@@ -24,6 +25,10 @@ function Root() {
 
   const logout = () => {
     signOut(auth);
+  };
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleSyncData = async () => {
@@ -50,8 +55,13 @@ function Root() {
       <TopBar
         onSettingsOpen={() => setOpenModal(true)}
         onLogout={logout}
+        onDrawerToggle={handleDrawerToggle}
       />
-      <Sidebar version="v0.3.0" />
+      <Sidebar 
+        version="v0.3.0" 
+        mobileOpen={mobileOpen} 
+        onDrawerToggle={handleDrawerToggle} 
+      />
       <Box
         component="main"
         sx={{

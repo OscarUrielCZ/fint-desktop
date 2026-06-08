@@ -257,7 +257,7 @@ function CreateView({ updatingExpense }: { updatingExpense: unknown }) {
         sx={{
           display: "flex",
           flexDirection: "column",
-          my: 2,
+          my: 5,
           px: 1,
         }}
       >
